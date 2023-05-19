@@ -1,0 +1,24 @@
+###### Настройки терминала ######
+
+# Название терминала / Default: [PAM]-{SERVER_HOSTNAME}-{HOSTNAME} or [PAM]-{HOSTNAME}
+TERMINAL_NAME:
+
+# Адрес основного сервера (api) / Default: localhost
+#CORE_HOST: localhost
+
+# Токен подключения терминала к основному серверу / Default: null
+#BOOTSTRAP_TOKEN:
+
+# Уровень логов [DEBUG, INFO, WARN, ERROR, FATAL, CRITICAL] / Default: INFO
+LOG_LEVEL: DEBUG
+
+# Формат логов, все значения необходимы / Default: %time% [%lvl%] %msg%
+# Доступные значения:
+# %time% - Время
+# %msg% - Сообщение
+# %lvl% - Уровень
+# Пример стандартного формата: 2006-01-02 15:04:05 [INFO] Log message
+#LOG_FORMAT: %time% [%lvl%] %msg%
+
+# Язык [ru] / Default: ru
+LANGUAGE_CODE: "ru"

@@ -18,8 +18,6 @@ const (
 	defaultNameMaxLen = 128
 )
 
-var GlobalConfig *Config
-
 type Config struct {
 	Name           string `mapstructure:"TERMINAL_NAME"`
 	CoreHost       string `mapstructure:"CORE_HOST"`
@@ -36,11 +34,11 @@ type Config struct {
 	ReplayFolderPath  string
 }
 
-func SetupConfig(configPath string) {
+func SetupConfig(configPath string) *Config {
 	var conf = getDefaultConfig()
 	loadConfigFromEnv(&conf)
 	loadConfigFromFile(configPath, &conf)
-	GlobalConfig = &conf
+	return &conf
 }
 
 func getDefaultConfig() Config {

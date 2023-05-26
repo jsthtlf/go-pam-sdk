@@ -1,7 +1,10 @@
 ###### Настройки терминала ######
 
 # Название терминала / Default: [PAM]-{SERVER_HOSTNAME}-{HOSTNAME} or [PAM]-{HOSTNAME}
-TERMINAL_NAME:
+TERMINAL_NAME: Тестовое название терминала
+
+# Описание терминала / Default: Pam terminal
+TERMINAL_COMMENT: Тестовое описание терминала
 
 # Адрес основного сервера (api) / Default: localhost
 #CORE_HOST: localhost
@@ -21,4 +24,4 @@ LOG_LEVEL: DEBUG
 #LOG_FORMAT: %time% [%lvl%] %msg%
 
 # Язык [ru] / Default: ru
-LANGUAGE_CODE: "ru"
+#LANGUAGE_CODE: ru

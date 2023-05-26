@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"github.com/jsthtlf/go-pam-sdk/common"
 	"log"
 	"os"
 	"path/filepath"
@@ -11,20 +12,24 @@ import (
 )
 
 const (
-	prefixName = "[PAM]-"
-
 	hostEnvKey = "SERVER_HOSTNAME"
 
 	defaultNameMaxLen = 128
 )
 
+var config *Config
+
 type Config struct {
-	Name           string `mapstructure:"TERMINAL_NAME"`
+	Name    string `mapstructure:"TERMINAL_NAME"`
+	Comment string `mapstructure:"TERMINAL_COMMENT"`
+
 	CoreHost       string `mapstructure:"CORE_HOST"`
 	BootstrapToken string `mapstructure:"BOOTSTRAP_TOKEN"`
 	LogLevel       string `mapstructure:"LOG_LEVEL"`
 	LogFormat      string `mapstructure:"LOG_FORMAT"`
 	LanguageCode   string `mapstructure:"LANGUAGE_CODE"`
+
+	TerminalType string
 
 	RootPath          string
 	DataFolderPath    string
@@ -34,10 +39,18 @@ type Config struct {
 	ReplayFolderPath  string
 }
 
+func GetCurrentConfig() Config {
+	if config == nil {
+		return getDefaultConfig()
+	}
+	return *config
+}
+
 func SetupConfig(configPath string) *Config {
 	var conf = getDefaultConfig()
 	loadConfigFromEnv(&conf)
 	loadConfigFromFile(configPath, &conf)
+	config = &conf
 	return &conf
 }
 
@@ -53,17 +66,21 @@ func getDefaultConfig() Config {
 
 	folders := []string{dataFolderPath, replayFolderPath, keyFolderPath, LogDirPath}
 	for i := range folders {
-		if err := EnsureDirExist(folders[i]); err != nil {
+		if err := common.EnsureDirExist(folders[i]); err != nil {
 			log.Fatalf("Create folder failed: %s", err)
 		}
 	}
 	return Config{
-		Name:           defaultName,
+		Name:    defaultName,
+		Comment: "Pam terminal",
+
 		CoreHost:       "localhost",
 		BootstrapToken: "",
 		LogLevel:       "INFO",
 		LogFormat:      "%time% [%lvl%] %msg%",
 		LanguageCode:   "ru",
+
+		TerminalType: "PAM",
 
 		AccessKeyFilePath: accessKeyFilePath,
 		RootPath:          rootPath,
@@ -74,22 +91,9 @@ func getDefaultConfig() Config {
 	}
 }
 
-func EnsureDirExist(path string) error {
-	if !haveDir(path) {
-		if err := os.MkdirAll(path, os.ModePerm); err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
 func have(path string) bool {
 	_, err := os.Stat(path)
 	return err == nil
-}
-func haveDir(file string) bool {
-	fi, err := os.Stat(file)
-	return err == nil && fi.IsDir()
 }
 
 func getPwdDirPath() string {
@@ -109,7 +113,7 @@ func loadConfigFromEnv(conf *Config) {
 		}
 	}
 	if err := envViper.Unmarshal(conf); err == nil {
-		log.Println("Load config from env success")
+		log.Println("Load config from env: success")
 	}
 }
 
@@ -120,7 +124,7 @@ func loadConfigFromFile(path string, conf *Config) {
 		fileViper.SetConfigFile(path)
 		if err = fileViper.ReadInConfig(); err == nil {
 			if err = fileViper.Unmarshal(conf); err == nil {
-				log.Printf("Load config from %s success\n", path)
+				log.Printf("Load config from %s: success\n", path)
 				return
 			}
 		}
@@ -132,7 +136,7 @@ func loadConfigFromFile(path string, conf *Config) {
 
 /*
 SERVER_HOSTNAME: Имя переменной окружения, может использоваться для настройки префикса зарегистрированного имени по умолчанию
-default name rule:
+Формат стандартного имени:
 [PAM]-{SERVER_HOSTNAME}-{HOSTNAME}
 
 	or
@@ -144,7 +148,7 @@ func getDefaultName() string {
 	if serverHostname, ok := os.LookupEnv(hostEnvKey); ok {
 		hostname = fmt.Sprintf("%s-%s", serverHostname, hostname)
 	}
-	hostRune := []rune(prefixName + hostname)
+	hostRune := []rune("[" + config.TerminalType + "] - " + hostname)
 	if len(hostRune) <= defaultNameMaxLen {
 		return string(hostRune)
 	}

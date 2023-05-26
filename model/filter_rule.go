@@ -1,0 +1,95 @@
+package model
+
+import (
+	"regexp"
+	"regexp/syntax"
+	"sort"
+)
+
+type RuleAction int
+
+const (
+	ActionDeny    RuleAction = 0
+	ActionAllow   RuleAction = 9
+	ActionConfirm RuleAction = 2
+	ActionUnknown RuleAction = 3
+
+	TypeRegex = "regex"
+	TypeCmd   = "command"
+)
+
+type FilterRule struct {
+	ID         string     `json:"id"`
+	Priority   int        `json:"priority"`
+	Type       string     `json:"type"`
+	Content    string     `json:"content"`
+	Action     RuleAction `json:"action"`
+	OrgId      string     `json:"org_id"`
+	RePattern  string     `json:"pattern"` // Регулярное выражение
+	IgnoreCase bool       `json:"ignore_case"`
+
+	pattern  *regexp.Regexp
+	compiled bool
+}
+
+func (sf *FilterRule) Pattern() *regexp.Regexp {
+	if sf.compiled {
+		return sf.pattern
+	}
+	syntaxFlag := syntax.Perl
+	if sf.IgnoreCase {
+		syntaxFlag = syntax.Perl | syntax.FoldCase
+	}
+	syntaxReg, err := syntax.Parse(sf.RePattern, syntaxFlag)
+	if err != nil {
+		return nil
+	}
+	pattern, err := regexp.Compile(syntaxReg.String())
+	if err == nil {
+		sf.pattern = pattern
+		sf.compiled = true
+	}
+	return pattern
+}
+
+func (sf *FilterRule) Match(cmd string) (RuleAction, string) {
+	pattern := sf.Pattern()
+	if pattern == nil {
+		return ActionUnknown, ""
+	}
+	found := pattern.FindString(cmd)
+	if found == "" {
+		return ActionUnknown, ""
+	}
+	return sf.Action, found
+}
+
+var _ sort.Interface = FilterRules{}
+
+type FilterRules []FilterRule
+
+func (f FilterRules) Swap(i, j int) {
+	f[i], f[j] = f[j], f[i]
+}
+
+func (f FilterRules) Len() int {
+	return len(f)
+}
+
+func (f FilterRules) Less(i, j int) bool {
+	switch {
+	case f[i].Priority == f[j].Priority:
+		return actionPriorityMap[f[i].Action] < actionPriorityMap[f[j].Action]
+	default:
+		return f[i].Priority < f[j].Priority
+	}
+}
+
+var (
+	actionPriorityMap = map[RuleAction]int{
+		ActionDeny:    0,
+		ActionConfirm: 1,
+		ActionAllow:   2,
+		ActionUnknown: 3,
+	}
+)

@@ -40,7 +40,7 @@ func MustRegisterTerminalAccount() (key model.AccessKey) {
 	conf := config.GetCurrentConfig()
 	for i := 0; i < 10; i++ {
 		terminal, err := RegisterTerminalAccount(conf.CoreHost,
-			conf.Name, conf.BootstrapToken, conf.Comment, conf.TerminalType)
+			conf.BootstrapToken, conf.Name, conf.Comment, conf.TerminalType)
 		if err != nil {
 			logger.Error(err.Error())
 			time.Sleep(5 * time.Second)

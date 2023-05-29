@@ -41,7 +41,8 @@ type Config struct {
 
 func GetCurrentConfig() Config {
 	if config == nil {
-		return getDefaultConfig()
+		cfg := getDefaultConfig()
+		config = &cfg
 	}
 	return *config
 }
@@ -74,13 +75,13 @@ func getDefaultConfig() Config {
 		Name:    defaultName,
 		Comment: "Pam terminal",
 
-		CoreHost:       "localhost",
+		CoreHost:       "http://localhost:8080",
 		BootstrapToken: "",
 		LogLevel:       "INFO",
 		LogFormat:      "%time% [%lvl%] %msg%",
 		LanguageCode:   "ru",
 
-		TerminalType: "PAM",
+		TerminalType: "pam",
 
 		AccessKeyFilePath: accessKeyFilePath,
 		RootPath:          rootPath,
@@ -148,7 +149,7 @@ func getDefaultName() string {
 	if serverHostname, ok := os.LookupEnv(hostEnvKey); ok {
 		hostname = fmt.Sprintf("%s-%s", serverHostname, hostname)
 	}
-	hostRune := []rune("[" + config.TerminalType + "] - " + hostname)
+	hostRune := []rune("[PAM] - " + hostname)
 	if len(hostRune) <= defaultNameMaxLen {
 		return string(hostRune)
 	}

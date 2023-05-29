@@ -1,13 +1,13 @@
 ###### Настройки терминала ######
 
 # Название терминала / Default: [PAM]-{SERVER_HOSTNAME}-{HOSTNAME} or [PAM]-{HOSTNAME}
-TERMINAL_NAME: Тестовое название терминала
+#TERMINAL_NAME:
 
 # Описание терминала / Default: Pam terminal
-TERMINAL_COMMENT: Тестовое описание терминала
+#TERMINAL_COMMENT:
 
-# Адрес основного сервера (api) / Default: localhost
-#CORE_HOST: localhost
+# Адрес основного сервера (api) / Default: http://localhost:8080
+#CORE_HOST: http://localhost:8080
 
 # Токен подключения терминала к основному серверу / Default: null
 #BOOTSTRAP_TOKEN:

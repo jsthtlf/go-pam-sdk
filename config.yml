@@ -7,13 +7,13 @@
 #TERMINAL_COMMENT:
 
 # Адрес основного сервера (api) / Default: http://localhost:8080
-#CORE_HOST: http://localhost:8080
+#CORE_HOST:
 
 # Токен подключения терминала к основному серверу / Default: null
 #BOOTSTRAP_TOKEN:
 
 # Уровень логов [DEBUG, INFO, WARN, ERROR, FATAL, CRITICAL] / Default: INFO
-LOG_LEVEL: DEBUG
+#LOG_LEVEL:
 
 # Формат логов, все значения необходимы / Default: %time% [%lvl%] %msg%
 # Доступные значения:
@@ -21,7 +21,7 @@ LOG_LEVEL: DEBUG
 # %msg% - Сообщение
 # %lvl% - Уровень
 # Пример стандартного формата: 2006-01-02 15:04:05 [INFO] Log message
-#LOG_FORMAT: %time% [%lvl%] %msg%
+#LOG_FORMAT:
 
 # Язык [ru] / Default: ru
-#LANGUAGE_CODE: ru
+#LANGUAGE_CODE:

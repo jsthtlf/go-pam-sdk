@@ -1,6 +1,8 @@
 package service
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
 
 	"github.com/jsthtlf/go-pam-sdk/model"
@@ -36,4 +38,11 @@ type TokenRenewalResponse struct {
 type TokenAuthInfoResponse struct {
 	Info model.ConnectTokenInfo
 	Err  []string
+}
+
+func (t *TokenAuthInfoResponse) UnmarshalJSON(p []byte) error {
+	if index := bytes.IndexByte(p, '['); index == 0 {
+		return json.Unmarshal(p, &t.Err)
+	}
+	return json.Unmarshal(p, &t.Info)
 }

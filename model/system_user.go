@@ -58,6 +58,8 @@ type SystemUserAuthInfo struct {
 	OrgName    string `json:"org_name"`
 	PublicKey  string `json:"public_key"`
 
+	SqlServerAuth string `json:"sqlserver_auth_type"`
+
 	UsernameSameWithUser bool `json:"username_same_with_user"`
 }
 

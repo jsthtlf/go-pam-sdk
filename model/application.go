@@ -39,7 +39,7 @@ var (
 		AppTypePostgres, AppTypeRedis, AppTypeMongoDB, AppTypeSQLite, AppTypeOracle}
 )
 
-const AppType = "Application"
+const AppType = "application"
 
 type Application struct {
 	ID       string `json:"id"`

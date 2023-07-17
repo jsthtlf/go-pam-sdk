@@ -13,9 +13,15 @@ require (
 )
 
 require (
+	github.com/Azure/azure-storage-blob-go v0.15.0 // indirect
+	github.com/aliyun/aliyun-oss-go-sdk v2.2.7+incompatible // indirect
+	github.com/aws/aws-sdk-go v1.44.300 // indirect
+	github.com/elastic/go-elasticsearch v0.0.0 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
+	github.com/huaweicloud/huaweicloud-sdk-go-obs v3.23.4+incompatible // indirect
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/lufia/plan9stats v0.0.0-20230326075908-cb1d2100619a // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
@@ -32,6 +38,7 @@ require (
 	github.com/yusufpapurcu/wmi v1.2.3 // indirect
 	golang.org/x/sys v0.8.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
+	golang.org/x/time v0.1.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

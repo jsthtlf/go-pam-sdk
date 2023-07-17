@@ -1,10 +1,9 @@
-package recorder
+package storage
 
 import (
 	"strings"
 
 	"github.com/jsthtlf/go-pam-sdk/model"
-	"github.com/jsthtlf/go-pam-sdk/recorder/storage"
 	"github.com/jsthtlf/go-pam-sdk/service"
 )
 
@@ -39,7 +38,7 @@ func NewReplayStorage(pamService *service.PAMService, conf *model.TerminalConfig
 		if endpointSuffix == "" {
 			endpointSuffix = "core.chinacloudapi.cn"
 		}
-		return storage.AzureReplayStorage{
+		return AzureReplayStorage{
 			AccountName:    accountName,
 			AccountKey:     accountKey,
 			ContainerName:  containerName,
@@ -58,7 +57,7 @@ func NewReplayStorage(pamService *service.PAMService, conf *model.TerminalConfig
 		accessKey = cfg.AccessKey
 		secretKey = cfg.SecretKey
 
-		return storage.OSSReplayStorage{
+		return OSSReplayStorage{
 			Endpoint:  endpoint,
 			Bucket:    bucket,
 			AccessKey: accessKey,
@@ -88,7 +87,7 @@ func NewReplayStorage(pamService *service.PAMService, conf *model.TerminalConfig
 		if bucket == "" {
 			bucket = "pamservice"
 		}
-		return storage.S3ReplayStorage{
+		return S3ReplayStorage{
 			Bucket:    bucket,
 			Region:    region,
 			AccessKey: accessKey,
@@ -108,16 +107,16 @@ func NewReplayStorage(pamService *service.PAMService, conf *model.TerminalConfig
 		accessKey = cfg.AccessKey
 		secretKey = cfg.SecretKey
 
-		return storage.OBSReplayStorage{
+		return OBSReplayStorage{
 			Endpoint:  endpoint,
 			Bucket:    bucket,
 			AccessKey: accessKey,
 			SecretKey: secretKey,
 		}
 	case "null":
-		return storage.NewNullStorage()
+		return NewNullStorage()
 	default:
-		return storage.ServerStorage{StorageType: "server", PAMService: pamService}
+		return ServerStorage{StorageType: "server", PAMService: pamService}
 	}
 }
 
@@ -147,15 +146,15 @@ func NewCommandStorage(pamService *service.PAMService, conf *model.TerminalConfi
 		if docType == "" {
 			docType = "_doc"
 		}
-		return storage.ESCommandStorage{
+		return ESCommandStorage{
 			Hosts:              hosts,
 			Index:              index,
 			DocType:            docType,
 			InsecureSkipVerify: skipVerify,
 		}
 	case "null":
-		return storage.NewNullStorage()
+		return NewNullStorage()
 	default:
-		return storage.ServerStorage{StorageType: "server", PAMService: pamService}
+		return ServerStorage{StorageType: "server", PAMService: pamService}
 	}
 }

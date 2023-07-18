@@ -8,16 +8,25 @@ import (
 func ReadBytes(len int, r io.Reader) ([]byte, error) {
 	b := make([]byte, len)
 	length, err := io.ReadFull(r, b)
+	if err != nil {
+		return nil, err
+	}
 	return b[:length], err
 }
 
 func ReadByte(r io.Reader) (byte, error) {
 	b, err := ReadBytes(1, r)
+	if err != nil {
+		return 0, err
+	}
 	return b[0], err
 }
 
 func ReadUInt8(r io.Reader) (uint8, error) {
 	b, err := ReadBytes(1, r)
+	if err != nil {
+		return 0, err
+	}
 	return uint8(b[0]), err
 }
 
@@ -59,7 +68,7 @@ func ReadUInt32BE(r io.Reader) (uint32, error) {
 
 func WriteByte(data byte, w io.Writer) (int, error) {
 	b := make([]byte, 1)
-	b[0] = byte(data)
+	b[0] = data
 	return w.Write(b)
 }
 
@@ -69,7 +78,7 @@ func WriteBytes(data []byte, w io.Writer) (int, error) {
 
 func WriteUInt8(data uint8, w io.Writer) (int, error) {
 	b := make([]byte, 1)
-	b[0] = byte(data)
+	b[0] = data
 	return w.Write(b)
 }
 
@@ -100,7 +109,7 @@ func WriteUInt32BE(data uint32, w io.Writer) (int, error) {
 func PutUint16BE(data uint16) (uint8, uint8) {
 	b := make([]byte, 2)
 	binary.BigEndian.PutUint16(b, data)
-	return uint8(b[0]), uint8(b[1])
+	return b[0], b[1]
 }
 
 func Uint16BE(d0, d1 uint8) uint16 {

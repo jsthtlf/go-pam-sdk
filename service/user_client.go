@@ -15,7 +15,7 @@ func NewUserClient(setters ...UserClientOption) *UserClient {
 		opts.client.SetHeader("X-Forwarded-For", opts.RemoteAddr)
 	}
 	if opts.LoginType != "" {
-		opts.client.SetHeader("X-JMS-LOGIN-TYPE", opts.LoginType)
+		opts.client.SetHeader("X-PAM-LOGIN-TYPE", opts.LoginType)
 	}
 	return &UserClient{
 		client: opts.client,

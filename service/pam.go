@@ -18,7 +18,7 @@ var ConnectErr = errors.New("api connect err")
 const (
 	minTimeOut = time.Second * 30
 
-	orgHeaderKey   = "X-JMS-ORG"
+	orgHeaderKey   = "X-PAM-ORG"
 	orgHeaderValue = "ROOT"
 )
 

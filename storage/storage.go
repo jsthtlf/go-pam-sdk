@@ -141,7 +141,7 @@ func NewCommandStorage(pamService *service.PAMService, conf *model.TerminalConfi
 			}
 		}
 		if index == "" {
-			index = "jumpserver"
+			index = "pam"
 		}
 		if docType == "" {
 			docType = "_doc"

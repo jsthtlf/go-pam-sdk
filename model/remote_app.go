@@ -8,7 +8,5 @@ type RemoteAPP struct {
 }
 
 type RemoteAppParameter struct {
-	Parameters       string `json:"parameters"`
-	Program          string `json:"program"`
-	WorkingDirectory string `json:"working_directory"`
+	Path string `json:"path"`
 }

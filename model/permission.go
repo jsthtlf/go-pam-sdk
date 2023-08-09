@@ -28,6 +28,10 @@ func (p *Permission) EnablePaste() bool {
 	return p.haveAction(ActionPaste)
 }
 
+func (p *Permission) EnableRemoteDisk() bool {
+	return p.haveAction(ActionRemoteDisk)
+}
+
 func (p *Permission) haveAction(action string) bool {
 	for _, value := range p.Actions {
 		if action == ActionALL || action == value {
@@ -46,6 +50,7 @@ const (
 	ActionCopy           = "clipboard_copy"
 	ActionPaste          = "clipboard_paste"
 	ActionCopyPaste      = "clipboard_copy_paste"
+	ActionRemoteDisk     = "drive_remote_hard_disk"
 )
 
 type ValidateResult struct {

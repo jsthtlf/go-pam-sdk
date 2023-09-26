@@ -184,12 +184,12 @@ func (c *Client) Do(method, reqUrl string, data, res interface{}, params ...map[
 			}
 		}
 	}
-	if resp.StatusCode >= 400 {
-		msg := fmt.Sprintf("%s %s failed, get code: %d, %s", req.Method, req.URL, resp.StatusCode, body)
-		err = errors.New(msg)
+	if resp.StatusCode < http.StatusBadRequest {
 		return
 	}
-	return
+
+	msg := fmt.Sprintf("%s %s failed with %d (%s)", req.Method, req.URL.Path, resp.StatusCode, http.StatusText(resp.StatusCode))
+	return resp, errors.New(msg)
 }
 
 func (c *Client) Get(reqUrl string, res interface{}, params ...map[string]string) (resp *http.Response, err error) {

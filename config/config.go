@@ -81,7 +81,7 @@ func getDefaultConfig() Config {
 		LogFormat:      "%time% [%lvl%] %msg%",
 		LanguageCode:   "ru",
 
-		TerminalType: "pam",
+		TerminalType: "pam-default",
 
 		AccessKeyFilePath: accessKeyFilePath,
 		RootPath:          rootPath,

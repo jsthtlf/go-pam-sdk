@@ -82,7 +82,7 @@ const (
 	AssetLoginConfirmURL = "/api/v1/acls/login-asset/check/"
 )
 
-// 命令复核
+// Проверка подтверждения команды
 
 const (
 	CommandConfirmURL = "/api/v1/assets/cmd-filters/command-confirm/"

@@ -14,6 +14,10 @@ type TerminalConfig struct {
 	HeartbeatDuration   int                    `json:"TERMINAL_HEARTBEAT_INTERVAL"`
 	HostKey             string                 `json:"TERMINAL_HOST_KEY"`
 	EnableSessionShare  bool                   `json:"SECURITY_SESSION_SHARE"`
+	EnableDbWeb         bool                   `json:"TERMINAL_SSH_DB_ENABLED"`
+	EnableRdpWeb        bool                   `json:"TERMINAL_RDP_ENABLED"`
+	EnableRdpNative     bool                   `json:"TERMINAL_RDP_NATIVE_ENABLED"`
+	EnableDbNative      bool                   `json:"TERMINAL_DB_NATIVE_ENABLED"`
 }
 
 type Terminal struct {

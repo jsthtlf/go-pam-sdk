@@ -2,12 +2,12 @@ package config
 
 import (
 	"fmt"
-	"github.com/jsthtlf/go-pam-sdk/common"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
+	"github.com/jsthtlf/go-pam-sdk/common"
 	"github.com/spf13/viper"
 )
 
@@ -47,10 +47,9 @@ func GetCurrentConfig() Config {
 	return *config
 }
 
-func SetupConfig(configPath string) *Config {
+func SetupConfig() *Config {
 	var conf = getDefaultConfig()
 	loadConfigFromEnv(&conf)
-	loadConfigFromFile(configPath, &conf)
 	config = &conf
 	return &conf
 }
@@ -92,11 +91,6 @@ func getDefaultConfig() Config {
 	}
 }
 
-func have(path string) bool {
-	_, err := os.Stat(path)
-	return err == nil
-}
-
 func getPwdDirPath() string {
 	if rootPath, err := os.Getwd(); err == nil {
 		return rootPath
@@ -115,23 +109,6 @@ func loadConfigFromEnv(conf *Config) {
 	}
 	if err := envViper.Unmarshal(conf); err == nil {
 		log.Println("Load config from env: success")
-	}
-}
-
-func loadConfigFromFile(path string, conf *Config) {
-	var err error
-	if have(path) {
-		fileViper := viper.New()
-		fileViper.SetConfigFile(path)
-		if err = fileViper.ReadInConfig(); err == nil {
-			if err = fileViper.Unmarshal(conf); err == nil {
-				log.Printf("Load config from %s: success\n", path)
-				return
-			}
-		}
-	}
-	if err != nil {
-		log.Fatalf("Load config from %s failed: %s\n", path, err)
 	}
 }
 

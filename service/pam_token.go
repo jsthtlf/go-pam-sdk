@@ -31,8 +31,8 @@ func (s *PAMService) RenewalToken(token string) (resp TokenRenewalResponse, err 
 }
 
 type TokenRenewalResponse struct {
-	Ok  bool   `json:"ok"`
-	Msg string `json:"msg"`
+	Token     string `json:"token"`
+	ExpiredAt int64  `json:"expired_at"`
 }
 
 type TokenAuthInfoResponse struct {

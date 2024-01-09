@@ -9,6 +9,7 @@ type ConnectTokenInfo struct {
 	Application *Application `json:"application,omitempty"`
 	Asset       *Asset       `json:"asset,omitempty"`
 	ExpiredAt   int64        `json:"expired_at"`
+	ExpireTime  int64        `json:"expire_time"`
 	Gateway     Gateway      `json:"gateway,omitempty"`
 	Domain      *Domain      `json:"domain"`
 

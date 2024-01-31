@@ -24,20 +24,21 @@ type dbAttrs struct {
 const (
 	AppTypeK8s = "k8s"
 
-	AppTypeMySQL      = "mysql"
-	AppTypeMariaDB    = "mariadb"
-	AppTypeSQLServer  = "sqlserver"
-	AppTypePostgres   = "postgresql"
-	AppTypeRedis      = "redis"
-	AppTypeMongoDB    = "mongodb"
-	AppTypeSQLite     = "sqlite"
-	AppTypeOracle     = "oracle"
-	AppTypeClickHouse = "clickhouse"
+	AppTypeMySQL          = "mysql"
+	AppTypeMariaDB        = "mariadb"
+	AppTypeSQLServer      = "sqlserver"
+	AppTypePostgres       = "postgresql"
+	AppTypeRedis          = "redis"
+	AppTypeMongoDB        = "mongodb"
+	AppTypeSQLite         = "sqlite"
+	AppTypeOracle         = "oracle"
+	AppTypeClickHouseTCP  = "clickhouse_tcp"
+	AppTypeClickHouseHTTP = "clickhouse_http"
 )
 
 var (
 	SupportedDBTypes = []string{AppTypeMySQL, AppTypeMariaDB, AppTypeSQLServer,
-		AppTypePostgres, AppTypeRedis, AppTypeMongoDB, AppTypeSQLite, AppTypeOracle, AppTypeClickHouse}
+		AppTypePostgres, AppTypeRedis, AppTypeMongoDB, AppTypeSQLite, AppTypeOracle, AppTypeClickHouseTCP}
 )
 
 const AppType = "application"

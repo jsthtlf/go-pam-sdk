@@ -7,7 +7,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
-	"github.com/jsthtlf/go-pam-sdk/logger"
 )
 
 type S3ReplayStorage struct {
@@ -18,11 +17,9 @@ type S3ReplayStorage struct {
 	Endpoint  string
 }
 
-func (s S3ReplayStorage) Upload(gZipFilePath, target string) (err error) {
-
+func (s S3ReplayStorage) Upload(gZipFilePath, target string) error {
 	file, err := os.Open(gZipFilePath)
 	if err != nil {
-		logger.Errorf("Open %s file failed: %s", gZipFilePath, err)
 		return err
 	}
 	defer file.Close()
@@ -35,7 +32,6 @@ func (s S3ReplayStorage) Upload(gZipFilePath, target string) (err error) {
 
 	sess, err := session.NewSession(s3Config)
 	if err != nil {
-		logger.Errorf("S3 new session failed: %s", err)
 		return err
 	}
 
@@ -47,14 +43,10 @@ func (s S3ReplayStorage) Upload(gZipFilePath, target string) (err error) {
 		Key:    aws.String(target),
 		Body:   file,
 	})
-	if err != nil {
-		logger.Errorf("S3 upload file %s failed: %s", gZipFilePath, err)
-		return err
-	}
 
-	return
+	return err
 }
 
 func (s S3ReplayStorage) TypeName() string {
-	return "s3"
+	return StorageTypeS3
 }

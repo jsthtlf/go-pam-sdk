@@ -9,7 +9,6 @@ import (
 	"net/http"
 
 	"github.com/elastic/go-elasticsearch"
-	"github.com/jsthtlf/go-pam-sdk/logger"
 	"github.com/jsthtlf/go-pam-sdk/model"
 )
 
@@ -21,7 +20,7 @@ type ESCommandStorage struct {
 	InsecureSkipVerify bool
 }
 
-func (es ESCommandStorage) BulkSave(commands []*model.Command) (err error) {
+func (es ESCommandStorage) BulkSave(commands []*model.Command) error {
 	var buf bytes.Buffer
 	transport := http.DefaultTransport.(*http.Transport).Clone()
 	tlsClientConfig := &tls.Config{InsecureSkipVerify: es.InsecureSkipVerify}
@@ -31,14 +30,12 @@ func (es ESCommandStorage) BulkSave(commands []*model.Command) (err error) {
 		Transport: transport,
 	})
 	if err != nil {
-		logger.Errorf("ES new client err: %s", err)
 		return err
 	}
 	for _, item := range commands {
 		meta := []byte(fmt.Sprintf(`{ "index" : { } }%s`, "\n"))
 		data, err := json.Marshal(item)
 		if err != nil {
-			logger.Errorf("ES marshal data to json err: %s", err)
 			return err
 		}
 		data = append(data, "\n"...)
@@ -49,53 +46,62 @@ func (es ESCommandStorage) BulkSave(commands []*model.Command) (err error) {
 	response, err := esClient.Bulk(bytes.NewReader(buf.Bytes()),
 		esClient.Bulk.WithIndex(es.Index), esClient.Bulk.WithDocumentType(es.DocType))
 	if err != nil {
-		logger.Errorf("ES client bulk save err: %s", err)
 		return err
 	}
 	defer response.Body.Close()
 	var (
-		blk        *bulkResponse
-		raw        map[string]interface{}
-		numErrors  int64
-		numIndexed int64
+		blk *bulkResponse
+		raw map[string]interface{}
 	)
 	if response.IsError() {
 		if err = json.NewDecoder(response.Body).Decode(&raw); err != nil {
-			logger.Errorf("ES failure to parse response body: %s", err)
-		} else {
-			logger.Errorf("ES failure to bulk save: [%d] %s: %s",
-				response.StatusCode, raw["error"].(map[string]interface{})["type"],
-				raw["error"].(map[string]interface{})["reason"],
-			)
+			return fmt.Errorf("es failure to parse error response body: %s", err)
 		}
-		return errors.New("es failure to bulk save")
+
+		return fmt.Errorf("es return [%d] %s: %s",
+			response.StatusCode,
+			raw["error"].(map[string]interface{})["type"],
+			raw["error"].(map[string]interface{})["reason"],
+		)
 	}
 
 	if err = json.NewDecoder(response.Body).Decode(&blk); err != nil {
-		logger.Errorf("ES failure to parse response body: %s", err)
-	} else {
-		for _, d := range blk.Items {
-			if d.Index.Status > 201 {
-				numErrors++
-				logger.Errorf("ES failure to save: [%d]: %s: %s: %s: %s",
+		return fmt.Errorf("es failure to parse response body: %s", err)
+	}
+
+	var (
+		numErrors  int
+		numIndexed int
+		errorsWrap error
+	)
+
+	errorsWrap = errors.New("save commands failed")
+
+	for _, d := range blk.Items {
+		if d.Index.Status > 201 {
+			numErrors++
+			errorsWrap = errors.Join(errorsWrap,
+				fmt.Errorf("ES failure to save: [%d]: %s: %s: %s: %s",
 					d.Index.Status,
 					d.Index.Error.Type,
 					d.Index.Error.Reason,
 					d.Index.Error.Cause.Type,
 					d.Index.Error.Cause.Reason,
-				)
-			} else {
-				numIndexed++
-			}
+				))
+		} else {
+			numIndexed++
 		}
 	}
-	logger.Infof("ES client try bulk save %d commands: success %d failure %d",
-		len(commands), numIndexed, numErrors)
-	return
+
+	if numErrors > 0 {
+		return errorsWrap
+	}
+
+	return nil
 }
 
 func (es ESCommandStorage) TypeName() string {
-	return "es"
+	return StorageTypeES
 }
 
 // https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-bulk.html#bulk-api-response-body

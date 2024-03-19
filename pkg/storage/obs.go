@@ -2,7 +2,6 @@ package storage
 
 import (
 	"github.com/huaweicloud/huaweicloud-sdk-go-obs/obs"
-	"github.com/jsthtlf/go-pam-sdk/logger"
 )
 
 type OBSReplayStorage struct {
@@ -12,23 +11,20 @@ type OBSReplayStorage struct {
 	SecretKey string
 }
 
-func (o OBSReplayStorage) Upload(gZipFilePath, target string) (err error) {
+func (o OBSReplayStorage) Upload(gZipFilePath, target string) error {
 	client, err := obs.New(o.AccessKey, o.SecretKey, o.Endpoint)
 	if err != nil {
-		return
+		return err
 	}
 	input := &obs.PutFileInput{}
 	input.Bucket = o.Bucket
 	input.Key = target
 	input.SourceFile = gZipFilePath
 	_, err = client.PutFile(input)
-	if err != nil {
-		logger.Errorf("OBS upload file %s failed: %s", gZipFilePath, err)
-		return err
-	}
-	return
+
+	return err
 }
 
 func (o OBSReplayStorage) TypeName() string {
-	return "obs"
+	return StorageTypeOBS
 }

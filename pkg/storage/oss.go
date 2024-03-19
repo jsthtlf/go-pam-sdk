@@ -2,7 +2,6 @@ package storage
 
 import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
-	"github.com/jsthtlf/go-pam-sdk/logger"
 )
 
 type OSSReplayStorage struct {
@@ -12,19 +11,18 @@ type OSSReplayStorage struct {
 	SecretKey string
 }
 
-func (o OSSReplayStorage) Upload(gZipFilePath, target string) (err error) {
+func (o OSSReplayStorage) Upload(gZipFilePath, target string) error {
 	client, err := oss.New(o.Endpoint, o.AccessKey, o.SecretKey)
 	if err != nil {
-		return
+		return err
 	}
 	bucket, err := client.Bucket(o.Bucket)
 	if err != nil {
-		logger.Error(err.Error())
-		return
+		return err
 	}
 	return bucket.PutObjectFromFile(target, gZipFilePath)
 }
 
 func (o OSSReplayStorage) TypeName() string {
-	return "oss"
+	return StorageTypeOSS
 }

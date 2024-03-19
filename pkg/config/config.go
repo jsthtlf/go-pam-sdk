@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/jsthtlf/go-pam-sdk/common"
+	"github.com/jsthtlf/go-pam-sdk/pkg/common"
 	"github.com/spf13/viper"
 )
 

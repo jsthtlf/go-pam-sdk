@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/jsthtlf/go-pam-sdk/model"
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 func (s *PAMService) SubmitCommandConfirm(sid string, ruleId string, cmd string) (res model.CommandTicketInfo, err error) {

@@ -2,7 +2,8 @@ package service
 
 import (
 	"fmt"
-	"github.com/jsthtlf/go-pam-sdk/model"
+
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 func (s *PAMService) CreateShareRoom(sessionId string, expired int, users []string) (res model.SharingSession, err error) {

@@ -1,9 +1,10 @@
 package storage
 
 import (
-	"github.com/jsthtlf/go-pam-sdk/model"
-	"github.com/jsthtlf/go-pam-sdk/service"
 	"strings"
+
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
+	"github.com/jsthtlf/go-pam-sdk/pkg/service"
 )
 
 type ReplayStorage interface {

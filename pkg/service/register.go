@@ -7,10 +7,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/jsthtlf/go-pam-sdk/config"
-	"github.com/jsthtlf/go-pam-sdk/httplib"
-	"github.com/jsthtlf/go-pam-sdk/logger"
-	"github.com/jsthtlf/go-pam-sdk/model"
+	"github.com/jsthtlf/go-pam-sdk/pkg/config"
+	"github.com/jsthtlf/go-pam-sdk/pkg/httplib"
+	"github.com/jsthtlf/go-pam-sdk/pkg/logger"
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 func MustPAMService() *PAMService {

@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/jsthtlf/go-pam-sdk/httplib"
-	"github.com/jsthtlf/go-pam-sdk/model"
+	"github.com/jsthtlf/go-pam-sdk/pkg/httplib"
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 var AccessKeyUnauthorized = errors.New("access key unauthorized")

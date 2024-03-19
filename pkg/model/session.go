@@ -3,7 +3,7 @@ package model
 import (
 	"strings"
 
-	"github.com/jsthtlf/go-pam-sdk/common"
+	"github.com/jsthtlf/go-pam-sdk/pkg/common"
 )
 
 type Session struct {

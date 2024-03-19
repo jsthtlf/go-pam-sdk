@@ -9,7 +9,7 @@ import (
 	"net/http"
 
 	"github.com/elastic/go-elasticsearch"
-	"github.com/jsthtlf/go-pam-sdk/model"
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 type ESCommandStorage struct {

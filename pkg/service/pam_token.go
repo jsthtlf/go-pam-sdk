@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/jsthtlf/go-pam-sdk/model"
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 func (s *PAMService) GetTokenAsset(token string) (tokenUser model.TokenUser, err error) {

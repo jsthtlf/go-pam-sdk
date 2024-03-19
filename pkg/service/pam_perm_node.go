@@ -2,7 +2,8 @@ package service
 
 import (
 	"fmt"
-	"github.com/jsthtlf/go-pam-sdk/model"
+
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 func (s *PAMService) GetUserNodeAssets(userID, nodeID string,

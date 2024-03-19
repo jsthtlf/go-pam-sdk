@@ -2,7 +2,8 @@ package service
 
 import (
 	"fmt"
-	"github.com/jsthtlf/go-pam-sdk/model"
+
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 func (s *PAMService) SearchPermAsset(userId, key string) (res model.AssetList, err error) {

@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"github.com/jsthtlf/go-pam-sdk/model"
-	"github.com/jsthtlf/go-pam-sdk/service"
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
+	"github.com/jsthtlf/go-pam-sdk/pkg/service"
 )
 
 type CommandStorage interface {

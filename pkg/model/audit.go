@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/jsthtlf/go-pam-sdk/common"
+	"github.com/jsthtlf/go-pam-sdk/pkg/common"
 )
 
 type FTPLog struct {

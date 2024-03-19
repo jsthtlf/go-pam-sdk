@@ -3,7 +3,7 @@ package service
 import (
 	"time"
 
-	"github.com/jsthtlf/go-pam-sdk/httplib"
+	"github.com/jsthtlf/go-pam-sdk/pkg/httplib"
 )
 
 type option struct {

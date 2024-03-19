@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/jsthtlf/go-pam-sdk/config"
+	"github.com/jsthtlf/go-pam-sdk/pkg/config"
 	"github.com/sirupsen/logrus"
 )
 

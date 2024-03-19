@@ -1,8 +1,8 @@
 package storage
 
 import (
-	"github.com/jsthtlf/go-pam-sdk/logger"
-	"github.com/jsthtlf/go-pam-sdk/model"
+	"github.com/jsthtlf/go-pam-sdk/pkg/logger"
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 func NewNullStorage() NullStorage {

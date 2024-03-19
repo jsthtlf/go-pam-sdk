@@ -1,9 +1,8 @@
 package service
 
 import (
-	"github.com/jsthtlf/go-pam-sdk/httplib"
-	"github.com/jsthtlf/go-pam-sdk/model"
-	//"github.com/davecgh/go-spew/spew"
+	"github.com/jsthtlf/go-pam-sdk/pkg/httplib"
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 func NewUserClient(setters ...UserClientOption) *UserClient {

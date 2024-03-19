@@ -3,8 +3,8 @@ package service
 import (
 	"fmt"
 
-	"github.com/jsthtlf/go-pam-sdk/common"
-	"github.com/jsthtlf/go-pam-sdk/model"
+	"github.com/jsthtlf/go-pam-sdk/pkg/common"
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
 func (s *PAMService) Upload(sessionID, gZipFile string) error {

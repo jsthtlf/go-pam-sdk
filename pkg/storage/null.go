@@ -5,11 +5,11 @@ import (
 	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
-func NewNullStorage() NullStorage {
-	return NullStorage{}
+type NullStorage struct {
 }
 
-type NullStorage struct {
+func NewNullStorage() NullStorage {
+	return NullStorage{}
 }
 
 func (f NullStorage) BulkSave(commands []*model.Command) error {

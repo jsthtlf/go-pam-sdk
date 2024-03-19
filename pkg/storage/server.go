@@ -12,6 +12,10 @@ type ServerStorage struct {
 	pamService *service.PAMService
 }
 
+func NewServerStorage(pamService *service.PAMService) ServerStorage {
+	return ServerStorage{pamService: pamService}
+}
+
 func (s ServerStorage) BulkSave(commands []*model.Command) error {
 	return s.pamService.PushSessionCommand(commands)
 }

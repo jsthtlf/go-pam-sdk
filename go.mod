@@ -4,7 +4,6 @@ go 1.21
 
 require (
 	github.com/Azure/azure-storage-blob-go v0.15.0
-	github.com/LeeEirc/httpsig v1.2.1
 	github.com/aliyun/aliyun-oss-go-sdk v3.0.2+incompatible
 	github.com/aws/aws-sdk-go v1.51.2
 	github.com/elastic/go-elasticsearch v0.0.0

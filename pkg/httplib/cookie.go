@@ -6,14 +6,12 @@ import (
 	"sync"
 )
 
-var _ http.CookieJar = (*customCookieJar)(nil)
-
-type customCookieJar struct {
+type simpleCookieJar struct {
 	mu   sync.Mutex
 	data map[string]string
 }
 
-func (c *customCookieJar) SetCookies(u *url.URL, cookies []*http.Cookie) {
+func (c *simpleCookieJar) SetCookies(u *url.URL, cookies []*http.Cookie) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	for i := range cookies {
@@ -23,7 +21,7 @@ func (c *customCookieJar) SetCookies(u *url.URL, cookies []*http.Cookie) {
 	}
 }
 
-func (c *customCookieJar) Cookies(u *url.URL) []*http.Cookie {
+func (c *simpleCookieJar) Cookies(u *url.URL) []*http.Cookie {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	cookies := make([]*http.Cookie, 0, len(c.data))

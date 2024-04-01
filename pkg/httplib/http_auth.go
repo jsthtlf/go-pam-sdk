@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/LeeEirc/httpsig"
+	"github.com/jsthtlf/go-pam-sdk/pkg/httplib/signature"
 )
 
 const (
@@ -20,7 +20,7 @@ type SigAuth struct {
 
 func (auth *SigAuth) Sign(r *http.Request) error {
 	headers := []string{signHeaderRequestTarget, signHeaderDate}
-	signer, err := httpsig.NewRequestSigner(auth.KeyID, auth.SecretID, signAlgorithm)
+	signer, err := signature.NewRequestSigner(auth.KeyID, auth.SecretID, signAlgorithm)
 	if err != nil {
 		return err
 	}

@@ -5,11 +5,11 @@ go 1.21
 require (
 	github.com/Azure/azure-storage-blob-go v0.15.0
 	github.com/aliyun/aliyun-oss-go-sdk v3.0.2+incompatible
-	github.com/aws/aws-sdk-go v1.51.2
+	github.com/aws/aws-sdk-go v1.51.12
 	github.com/elastic/go-elasticsearch v0.0.0
 	github.com/google/uuid v1.6.0
 	github.com/huaweicloud/huaweicloud-sdk-go-obs v3.23.12+incompatible
-	github.com/shirou/gopsutil/v3 v3.24.2
+	github.com/shirou/gopsutil/v3 v3.24.3
 	github.com/sirupsen/logrus v1.9.3
 	github.com/spf13/viper v1.18.2
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1

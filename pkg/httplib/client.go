@@ -240,6 +240,10 @@ func (c *Client) handleResp(resp *http.Response, res interface{}) (err error) {
 		return err
 	}
 
+	if resp.StatusCode >= http.StatusBadRequest {
+		return fmt.Errorf("%s %s failed, get response with %d: %s", req.Method, req.URL.Path, resp.StatusCode, body)
+	}
+
 	if res != nil {
 		switch {
 		case strings.Contains(resp.Header.Get("Content-Type"), "application/json"):
@@ -248,10 +252,6 @@ func (c *Client) handleResp(resp *http.Response, res interface{}) (err error) {
 				return fmt.Errorf("%s %s failed, json unmarshal failed: %s", req.Method, req.URL, err)
 			}
 		}
-	}
-
-	if resp.StatusCode >= http.StatusBadRequest {
-		return fmt.Errorf("%s %s failed, get response with %d: %s", req.Method, req.URL.Path, resp.StatusCode, body)
 	}
 
 	return nil

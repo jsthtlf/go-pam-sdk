@@ -11,6 +11,15 @@ type OSSReplayStorage struct {
 	SecretKey string
 }
 
+func NewOSSReplayStorage(endpoint, bucket, accessKey, secretKey string) OSSReplayStorage {
+	return OSSReplayStorage{
+		Endpoint:  endpoint,
+		Bucket:    bucket,
+		AccessKey: accessKey,
+		SecretKey: secretKey,
+	}
+}
+
 func (o OSSReplayStorage) Upload(gZipFilePath, target string) error {
 	client, err := oss.New(o.Endpoint, o.AccessKey, o.SecretKey)
 	if err != nil {
@@ -24,5 +33,5 @@ func (o OSSReplayStorage) Upload(gZipFilePath, target string) error {
 }
 
 func (o OSSReplayStorage) TypeName() string {
-	return StorageTypeOSS
+	return TypeOSS
 }

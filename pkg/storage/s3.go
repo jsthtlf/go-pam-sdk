@@ -17,6 +17,16 @@ type S3ReplayStorage struct {
 	Endpoint  string
 }
 
+func NewS3ReplayStorage(bucket, region, accessKey, secretKey, endpoint string) S3ReplayStorage {
+	return S3ReplayStorage{
+		Bucket:    bucket,
+		Region:    region,
+		AccessKey: accessKey,
+		SecretKey: secretKey,
+		Endpoint:  endpoint,
+	}
+}
+
 func (s S3ReplayStorage) Upload(gZipFilePath, target string) error {
 	file, err := os.Open(gZipFilePath)
 	if err != nil {
@@ -48,5 +58,5 @@ func (s S3ReplayStorage) Upload(gZipFilePath, target string) error {
 }
 
 func (s S3ReplayStorage) TypeName() string {
-	return StorageTypeS3
+	return TypeS3
 }

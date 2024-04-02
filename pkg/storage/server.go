@@ -26,5 +26,5 @@ func (s ServerStorage) Upload(gZipFilePath, target string) error {
 }
 
 func (s ServerStorage) TypeName() string {
-	return StorageTypeServer
+	return TypeServer
 }

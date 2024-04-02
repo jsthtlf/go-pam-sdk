@@ -20,6 +20,15 @@ type ESCommandStorage struct {
 	InsecureSkipVerify bool
 }
 
+func NewESCommandStorage(hosts []string, index, docType string, skipVerify bool) ESCommandStorage {
+	return ESCommandStorage{
+		Hosts:              hosts,
+		Index:              index,
+		DocType:            docType,
+		InsecureSkipVerify: skipVerify,
+	}
+}
+
 func (es ESCommandStorage) BulkSave(commands []*model.Command) error {
 	var buf bytes.Buffer
 	transport := http.DefaultTransport.(*http.Transport).Clone()
@@ -101,7 +110,7 @@ func (es ESCommandStorage) BulkSave(commands []*model.Command) error {
 }
 
 func (es ESCommandStorage) TypeName() string {
-	return StorageTypeES
+	return TypeES
 }
 
 // https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-bulk.html#bulk-api-response-body

@@ -5,8 +5,7 @@ import (
 	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
-type NullStorage struct {
-}
+type NullStorage struct{}
 
 func NewNullStorage() NullStorage {
 	return NullStorage{}
@@ -23,5 +22,5 @@ func (f NullStorage) Upload(gZipFile, target string) error {
 }
 
 func (f NullStorage) TypeName() string {
-	return StorageTypeNull
+	return TypeNull
 }

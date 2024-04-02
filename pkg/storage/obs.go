@@ -11,6 +11,15 @@ type OBSReplayStorage struct {
 	SecretKey string
 }
 
+func NewOBSReplayStorage(endpoint, bucket, accessKey, secretKey string) OBSReplayStorage {
+	return OBSReplayStorage{
+		Endpoint:  endpoint,
+		Bucket:    bucket,
+		AccessKey: accessKey,
+		SecretKey: secretKey,
+	}
+}
+
 func (o OBSReplayStorage) Upload(gZipFilePath, target string) error {
 	client, err := obs.New(o.AccessKey, o.SecretKey, o.Endpoint)
 	if err != nil {
@@ -26,5 +35,5 @@ func (o OBSReplayStorage) Upload(gZipFilePath, target string) error {
 }
 
 func (o OBSReplayStorage) TypeName() string {
-	return StorageTypeOBS
+	return TypeOBS
 }

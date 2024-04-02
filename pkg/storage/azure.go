@@ -16,6 +16,15 @@ type AzureReplayStorage struct {
 	EndpointSuffix string
 }
 
+func NewAzureReplayStorage(accountName, accountKey, containerName, endpointSuffix string) AzureReplayStorage {
+	return AzureReplayStorage{
+		AccountName:    accountName,
+		AccountKey:     accountKey,
+		ContainerName:  containerName,
+		EndpointSuffix: endpointSuffix,
+	}
+}
+
 func (a AzureReplayStorage) Upload(gZipFilePath, target string) error {
 	file, err := os.Open(gZipFilePath)
 	if err != nil {
@@ -45,5 +54,5 @@ func (a AzureReplayStorage) Upload(gZipFilePath, target string) error {
 }
 
 func (a AzureReplayStorage) TypeName() string {
-	return StorageTypeAzure
+	return TypeAzure
 }

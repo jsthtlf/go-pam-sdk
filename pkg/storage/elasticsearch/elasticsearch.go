@@ -1,4 +1,4 @@
-package storage
+package elasticsearch
 
 import (
 	"bytes"
@@ -12,7 +12,7 @@ import (
 	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
-type ESCommandStorage struct {
+type CommandStorage struct {
 	Hosts   []string
 	Index   string
 	DocType string
@@ -20,8 +20,8 @@ type ESCommandStorage struct {
 	InsecureSkipVerify bool
 }
 
-func NewESCommandStorage(hosts []string, index, docType string, skipVerify bool) ESCommandStorage {
-	return ESCommandStorage{
+func NewCommandStorage(hosts []string, index, docType string, skipVerify bool) CommandStorage {
+	return CommandStorage{
 		Hosts:              hosts,
 		Index:              index,
 		DocType:            docType,
@@ -29,7 +29,7 @@ func NewESCommandStorage(hosts []string, index, docType string, skipVerify bool)
 	}
 }
 
-func (es ESCommandStorage) BulkSave(commands []*model.Command) error {
+func (es CommandStorage) BulkSave(commands []*model.Command) error {
 	var buf bytes.Buffer
 	transport := http.DefaultTransport.(*http.Transport).Clone()
 	tlsClientConfig := &tls.Config{InsecureSkipVerify: es.InsecureSkipVerify}
@@ -109,8 +109,8 @@ func (es ESCommandStorage) BulkSave(commands []*model.Command) error {
 	return nil
 }
 
-func (es ESCommandStorage) TypeName() string {
-	return TypeES
+func (es CommandStorage) TypeName() string {
+	return "es"
 }
 
 // https://www.elastic.co/guide/en/elasticsearch/reference/master/docs-bulk.html#bulk-api-response-body

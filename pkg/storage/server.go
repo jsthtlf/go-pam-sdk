@@ -5,26 +5,30 @@ import (
 	"strings"
 
 	"github.com/jsthtlf/go-pam-sdk/pkg/model"
-	"github.com/jsthtlf/go-pam-sdk/pkg/service"
 )
 
-type ServerStorage struct {
-	pamService *service.PAMService
+type serverProvider interface {
+	CreateSessionCommand(commands []*model.Command) (err error)
+	UploadReplay(sid, gZipFile string) error
 }
 
-func NewServerStorage(pamService *service.PAMService) ServerStorage {
-	return ServerStorage{pamService: pamService}
+type Storage struct {
+	p serverProvider
 }
 
-func (s ServerStorage) BulkSave(commands []*model.Command) error {
-	return s.pamService.PushSessionCommand(commands)
+func NewStorage(p serverProvider) Storage {
+	return Storage{p: p}
 }
 
-func (s ServerStorage) Upload(gZipFilePath, target string) error {
+func (s Storage) BulkSave(commands []*model.Command) error {
+	return s.p.CreateSessionCommand(commands)
+}
+
+func (s Storage) Upload(gZipFilePath, target string) error {
 	sessionID := strings.Split(filepath.Base(gZipFilePath), ".")[0]
-	return s.pamService.Upload(sessionID, gZipFilePath)
+	return s.p.UploadReplay(sessionID, gZipFilePath)
 }
 
-func (s ServerStorage) TypeName() string {
-	return TypeServer
+func (s Storage) TypeName() string {
+	return "server"
 }

@@ -1,4 +1,4 @@
-package storage
+package azure
 
 import (
 	"context"
@@ -9,15 +9,15 @@ import (
 	"github.com/Azure/azure-storage-blob-go/azblob"
 )
 
-type AzureReplayStorage struct {
+type ReplayStorage struct {
 	AccountName    string
 	AccountKey     string
 	ContainerName  string
 	EndpointSuffix string
 }
 
-func NewAzureReplayStorage(accountName, accountKey, containerName, endpointSuffix string) AzureReplayStorage {
-	return AzureReplayStorage{
+func NewReplayStorage(accountName, accountKey, containerName, endpointSuffix string) ReplayStorage {
+	return ReplayStorage{
 		AccountName:    accountName,
 		AccountKey:     accountKey,
 		ContainerName:  containerName,
@@ -25,7 +25,7 @@ func NewAzureReplayStorage(accountName, accountKey, containerName, endpointSuffi
 	}
 }
 
-func (a AzureReplayStorage) Upload(gZipFilePath, target string) error {
+func (a ReplayStorage) Upload(gZipFilePath, target string) error {
 	file, err := os.Open(gZipFilePath)
 	if err != nil {
 		return err
@@ -53,6 +53,6 @@ func (a AzureReplayStorage) Upload(gZipFilePath, target string) error {
 	return err
 }
 
-func (a AzureReplayStorage) TypeName() string {
-	return TypeAzure
+func (a ReplayStorage) TypeName() string {
+	return "azure"
 }

@@ -22,5 +22,5 @@ func (f NullStorage) Upload(gZipFile, target string) error {
 }
 
 func (f NullStorage) TypeName() string {
-	return TypeNull
+	return "null"
 }

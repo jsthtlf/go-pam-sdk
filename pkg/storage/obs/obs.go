@@ -1,18 +1,18 @@
-package storage
+package obs
 
 import (
 	"github.com/huaweicloud/huaweicloud-sdk-go-obs/obs"
 )
 
-type OBSReplayStorage struct {
+type ReplayStorage struct {
 	Endpoint  string
 	Bucket    string
 	AccessKey string
 	SecretKey string
 }
 
-func NewOBSReplayStorage(endpoint, bucket, accessKey, secretKey string) OBSReplayStorage {
-	return OBSReplayStorage{
+func NewReplayStorage(endpoint, bucket, accessKey, secretKey string) ReplayStorage {
+	return ReplayStorage{
 		Endpoint:  endpoint,
 		Bucket:    bucket,
 		AccessKey: accessKey,
@@ -20,7 +20,7 @@ func NewOBSReplayStorage(endpoint, bucket, accessKey, secretKey string) OBSRepla
 	}
 }
 
-func (o OBSReplayStorage) Upload(gZipFilePath, target string) error {
+func (o ReplayStorage) Upload(gZipFilePath, target string) error {
 	client, err := obs.New(o.AccessKey, o.SecretKey, o.Endpoint)
 	if err != nil {
 		return err
@@ -34,6 +34,6 @@ func (o OBSReplayStorage) Upload(gZipFilePath, target string) error {
 	return err
 }
 
-func (o OBSReplayStorage) TypeName() string {
-	return TypeOBS
+func (o ReplayStorage) TypeName() string {
+	return "obs"
 }

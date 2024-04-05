@@ -1,18 +1,18 @@
-package storage
+package oss
 
 import (
 	"github.com/aliyun/aliyun-oss-go-sdk/oss"
 )
 
-type OSSReplayStorage struct {
+type ReplayStorage struct {
 	Endpoint  string
 	Bucket    string
 	AccessKey string
 	SecretKey string
 }
 
-func NewOSSReplayStorage(endpoint, bucket, accessKey, secretKey string) OSSReplayStorage {
-	return OSSReplayStorage{
+func NewReplayStorage(endpoint, bucket, accessKey, secretKey string) ReplayStorage {
+	return ReplayStorage{
 		Endpoint:  endpoint,
 		Bucket:    bucket,
 		AccessKey: accessKey,
@@ -20,7 +20,7 @@ func NewOSSReplayStorage(endpoint, bucket, accessKey, secretKey string) OSSRepla
 	}
 }
 
-func (o OSSReplayStorage) Upload(gZipFilePath, target string) error {
+func (o ReplayStorage) Upload(gZipFilePath, target string) error {
 	client, err := oss.New(o.Endpoint, o.AccessKey, o.SecretKey)
 	if err != nil {
 		return err
@@ -32,6 +32,6 @@ func (o OSSReplayStorage) Upload(gZipFilePath, target string) error {
 	return bucket.PutObjectFromFile(target, gZipFilePath)
 }
 
-func (o OSSReplayStorage) TypeName() string {
-	return TypeOSS
+func (o ReplayStorage) TypeName() string {
+	return "oss"
 }

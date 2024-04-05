@@ -1,4 +1,4 @@
-package storage
+package s3
 
 import (
 	"os"
@@ -9,7 +9,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 )
 
-type S3ReplayStorage struct {
+type ReplayStorage struct {
 	Bucket    string
 	Region    string
 	AccessKey string
@@ -17,8 +17,8 @@ type S3ReplayStorage struct {
 	Endpoint  string
 }
 
-func NewS3ReplayStorage(bucket, region, accessKey, secretKey, endpoint string) S3ReplayStorage {
-	return S3ReplayStorage{
+func NewReplayStorage(bucket, region, accessKey, secretKey, endpoint string) ReplayStorage {
+	return ReplayStorage{
 		Bucket:    bucket,
 		Region:    region,
 		AccessKey: accessKey,
@@ -27,7 +27,7 @@ func NewS3ReplayStorage(bucket, region, accessKey, secretKey, endpoint string) S
 	}
 }
 
-func (s S3ReplayStorage) Upload(gZipFilePath, target string) error {
+func (s ReplayStorage) Upload(gZipFilePath, target string) error {
 	file, err := os.Open(gZipFilePath)
 	if err != nil {
 		return err
@@ -57,6 +57,6 @@ func (s S3ReplayStorage) Upload(gZipFilePath, target string) error {
 	return err
 }
 
-func (s S3ReplayStorage) TypeName() string {
-	return TypeS3
+func (s ReplayStorage) TypeName() string {
+	return "s3"
 }

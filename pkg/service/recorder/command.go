@@ -6,29 +6,30 @@ import (
 
 	"github.com/jsthtlf/go-pam-sdk/pkg/logger"
 	"github.com/jsthtlf/go-pam-sdk/pkg/model"
-	"github.com/jsthtlf/go-pam-sdk/pkg/service"
 	"github.com/jsthtlf/go-pam-sdk/pkg/storage"
 )
 
+type notifier interface {
+	CreateNotifyCommand(commands []*model.Command) (err error)
+}
+
 type CommandRecorder struct {
-	sessionID  string
-	pamService *service.PAMService
-	storage    storage.CommandStorage
+	sessionID string
+	notifier  notifier
+	storage   storage.CommandStorage
 
 	queue chan *model.Command
 	done  chan struct{}
 	wg    sync.WaitGroup
 }
 
-func NewCommandRecorder(sid string,
-	pamService *service.PAMService,
-	storage storage.CommandStorage) (*CommandRecorder, error) {
+func NewCommandRecorder(sid string, notifier notifier, storage storage.CommandStorage) (*CommandRecorder, error) {
 	return &CommandRecorder{
-		sessionID:  sid,
-		storage:    storage,
-		queue:      make(chan *model.Command, 10),
-		done:       make(chan struct{}),
-		pamService: pamService,
+		sessionID: sid,
+		storage:   storage,
+		queue:     make(chan *model.Command, 10),
+		done:      make(chan struct{}),
+		notifier:  notifier,
 	}, nil
 }
 
@@ -77,7 +78,7 @@ func (c *CommandRecorder) Record() {
 			}
 		}
 		if len(notificationList) > 0 {
-			if err := c.pamService.NotifyCommand(notificationList); err == nil {
+			if err := c.notifier.CreateNotifyCommand(notificationList); err == nil {
 				notificationList = notificationList[:0]
 			} else {
 				logger.Errorf("Create notify command for session (%s) failed: %+v", c.sessionID, err)

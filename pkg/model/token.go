@@ -17,3 +17,8 @@ type ConnectTokenInfo struct {
 
 	SystemUserAuthInfo *SystemUserAuthInfo `json:"system_user"`
 }
+
+type TokenRenewalResponse struct {
+	Token     string `json:"token"`
+	ExpiredAt int64  `json:"expired_at"`
+}

@@ -20,3 +20,10 @@ type ShareRecord struct {
 	Joiner    string      `json:"joiner"`
 	Err       interface{} `json:"error"`
 }
+
+type SharePostData struct {
+	ShareId    string `json:"sharing"`
+	Code       string `json:"verify_code"`
+	UserId     string `json:"joiner"`
+	RemoteAddr string `json:"remote_addr"`
+}

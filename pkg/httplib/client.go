@@ -21,7 +21,6 @@ type AuthSign interface {
 }
 
 type Client struct {
-	Timeout  time.Duration
 	baseUrl  string
 	cookies  map[string]string
 	headers  map[string]string
@@ -39,7 +38,6 @@ func NewClient(baseUrl string, timeout time.Duration) (*Client, error) {
 	}
 
 	return &Client{
-		Timeout: timeout,
 		baseUrl: baseUrl,
 		cookies: make(map[string]string),
 		headers: make(map[string]string),
@@ -54,12 +52,11 @@ func NewClient(baseUrl string, timeout time.Duration) (*Client, error) {
 
 func (c *Client) Clone() Client {
 	return Client{
-		Timeout: c.Timeout,
 		baseUrl: c.baseUrl,
 		cookies: make(map[string]string),
 		headers: make(map[string]string),
 		http: &http.Client{
-			Timeout: c.Timeout,
+			Timeout: c.http.Timeout,
 			Jar: &simpleCookieJar{
 				data: map[string]string{},
 			},

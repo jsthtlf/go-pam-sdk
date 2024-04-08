@@ -1,19 +1,17 @@
 package model
 
-import (
-	"github.com/jsthtlf/go-pam-sdk/pkg/common"
-)
+import "github.com/jsthtlf/go-pam-sdk/pkg/utils"
 
 type FTPLog struct {
-	User       string         `json:"user"`
-	Hostname   string         `json:"asset"`
-	OrgID      string         `json:"org_id"`
-	SystemUser string         `json:"system_user"`
-	RemoteAddr string         `json:"remote_addr"`
-	Operate    string         `json:"operate"`
-	Path       string         `json:"filename"`
-	DateStart  common.UTCTime `json:"date_start"`
-	IsSuccess  bool           `json:"is_success"`
+	User       string        `json:"user"`
+	Hostname   string        `json:"asset"`
+	OrgID      string        `json:"org_id"`
+	SystemUser string        `json:"system_user"`
+	RemoteAddr string        `json:"remote_addr"`
+	Operate    string        `json:"operate"`
+	Path       string        `json:"filename"`
+	DateStart  utils.UTCTime `json:"date_start"`
+	IsSuccess  bool          `json:"is_success"`
 }
 
 const (

@@ -7,7 +7,8 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/jsthtlf/go-pam-sdk/pkg/common"
+	"github.com/jsthtlf/go-pam-sdk/pkg/utils"
+
 	"github.com/spf13/viper"
 )
 
@@ -66,7 +67,7 @@ func getDefaultConfig() Config {
 
 	folders := []string{dataFolderPath, replayFolderPath, keyFolderPath, LogDirPath}
 	for i := range folders {
-		if err := common.EnsureDirExist(folders[i]); err != nil {
+		if err := utils.EnsureDirExist(folders[i]); err != nil {
 			log.Fatalf("Create folder failed: %s", err)
 		}
 	}

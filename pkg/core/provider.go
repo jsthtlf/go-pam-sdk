@@ -1,8 +1,9 @@
 package core
 
 import (
+	"time"
+
 	"github.com/jsthtlf/go-pam-sdk/pkg/model"
-	"github.com/jsthtlf/go-pam-sdk/pkg/utils"
 )
 
 type (
@@ -69,7 +70,7 @@ type (
 		SessionSuccess(sid string) error
 		SessionFailed(sid string, err error) error
 		SessionDisconnect(sid string) error
-		SessionFinished(sid string, time utils.UTCTime) error
+		SessionFinished(sid string, time time.Time) error
 		GetSessionById(sid string) (data model.Session, err error)
 		CreateSessionTicketRelation(sid, ticketId string) (err error)
 		UploadReplay(sid, gZipFile string) error

@@ -2,6 +2,7 @@ package http
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 	"github.com/jsthtlf/go-pam-sdk/pkg/utils"
@@ -33,13 +34,13 @@ func (p *httpProvider) SessionFailed(sid string, err error) error {
 }
 
 func (p *httpProvider) SessionDisconnect(sid string) error {
-	return p.SessionFinished(sid, utils.NewNowUTCTime())
+	return p.SessionFinished(sid, time.Now())
 }
 
-func (p *httpProvider) SessionFinished(sid string, time utils.UTCTime) error {
+func (p *httpProvider) SessionFinished(sid string, t time.Time) error {
 	data := map[string]interface{}{
 		"is_finished": true,
-		"date_end":    time,
+		"date_end":    utils.NewUTCTime(t),
 	}
 	return p.sessionPatch(sid, data)
 }

@@ -46,7 +46,7 @@ type ReplayStorage interface {
 	Upload(gZipFile, target string) error
 }
 
-func NewCommandStorage(p serverProvider, conf *model.CommandConfig) CommandStorage {
+func NewCommandStorage(p serverProvider, conf model.CommandConfig) CommandStorage {
 	switch conf.TypeName {
 	case TypeES, TypeElasticSearch:
 		hosts := conf.Hosts
@@ -69,7 +69,7 @@ func NewCommandStorage(p serverProvider, conf *model.CommandConfig) CommandStora
 	}
 }
 
-func NewReplayStorage(p serverProvider, conf *model.ReplayConfig) ReplayStorage {
+func NewReplayStorage(p serverProvider, conf model.ReplayConfig) ReplayStorage {
 	switch conf.TypeName {
 	case TypeAzure:
 		accountName := conf.AccountName

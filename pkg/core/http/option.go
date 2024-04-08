@@ -51,9 +51,9 @@ func WithTerminalComment(comment string) Option {
 	}
 }
 
-func WithTerminalType(name string) Option {
+func WithTerminalType(typ string) Option {
 	return func(o *options) {
-		o.TerminalType = name
+		o.TerminalType = typ
 	}
 }
 

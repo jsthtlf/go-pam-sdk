@@ -17,13 +17,8 @@ const (
 )
 
 var defaultOptions = &options{
-	Host:            "127.0.0.1",
-	TimeOut:         minTimeOut,
-	BootstrapToken:  "",
-	TerminalName:    "asd", // TODO
-	TerminalComment: "",
-	TerminalType:    "pam-default", // TODO list
-	AccessKeyPath:   "",
+	Host:    "127.0.0.1",
+	TimeOut: minTimeOut,
 }
 
 func New(opts ...Option) (core.Provider, error) {

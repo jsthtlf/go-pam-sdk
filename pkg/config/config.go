@@ -16,6 +16,12 @@ const (
 	hostEnvKey = "SERVER_HOSTNAME"
 
 	defaultNameMaxLen = 128
+
+	TerminalDefault = "pam-default"
+	TerminalDb      = "db"
+	TerminalDbWeb   = "db-web-ssh"
+	TerminalRdp     = "rdp"
+	TerminalRdpWeb  = "rdp-web"
 )
 
 var config *Config
@@ -81,7 +87,7 @@ func getDefaultConfig() Config {
 		LogFormat:      "%time% [%lvl%] %msg%",
 		LanguageCode:   "ru",
 
-		TerminalType: "pam-default",
+		TerminalType: TerminalDefault,
 
 		AccessKeyFilePath: accessKeyFilePath,
 		RootPath:          rootPath,

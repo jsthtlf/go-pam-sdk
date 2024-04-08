@@ -61,12 +61,12 @@ func (p *httpProvider) CreateSessionTicketRelation(sid, ticketId string) (err er
 }
 
 func (p *httpProvider) UploadReplay(sid, gZipFile string) error {
-	version := model.ParseReplayVersion(gZipFile, model.Version3) // TODO перенести
-	var res map[string]interface{}
+	version := utils.ParseReplayVersion(gZipFile, utils.Version3)
 	Url := fmt.Sprintf(UrlSessionReplay, sid)
-	fields := make(map[string]string)
-	fields["version"] = string(version)
-	return p.authClient.PostFileWithFields(Url, gZipFile, fields, &res)
+	data := map[string]string{
+		"version": string(version),
+	}
+	return p.authClient.PostFileWithFields(Url, gZipFile, data, nil)
 }
 
 func (p *httpProvider) FinishReply(sid string) error {

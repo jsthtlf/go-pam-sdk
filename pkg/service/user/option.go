@@ -19,7 +19,7 @@ func WithUsername(username string) Option {
 	}
 }
 
-func WithPasssword(password string) Option {
+func WithPassword(password string) Option {
 	return func(args *options) {
 		args.Password = password
 	}

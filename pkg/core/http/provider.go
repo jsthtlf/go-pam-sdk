@@ -52,6 +52,10 @@ type httpProvider struct {
 	opt        *options
 }
 
+func (p *httpProvider) CloneClient() httplib.Client {
+	return p.authClient.Clone()
+}
+
 func (p *httpProvider) Copy() core.Provider {
 	client := p.authClient.Clone()
 	if p.opt.sign != nil {

@@ -3,6 +3,7 @@ package core
 import (
 	"time"
 
+	"github.com/jsthtlf/go-pam-sdk/pkg/httplib"
 	"github.com/jsthtlf/go-pam-sdk/pkg/model"
 )
 
@@ -21,6 +22,7 @@ type (
 		TokenProvider
 
 		Copy() Provider
+		CloneClient() httplib.Client
 		SetCookie(name, value string)
 	}
 

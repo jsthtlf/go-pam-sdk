@@ -1,12 +1,14 @@
 package s3
 
 import (
+	"context"
 	"os"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
+	"github.com/aws/aws-sdk-go-v2/feature/s3/manager"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 )
 
 type ReplayStorage struct {
@@ -33,22 +35,24 @@ func (s ReplayStorage) Upload(gZipFilePath, target string) error {
 		return err
 	}
 	defer file.Close()
-	s3Config := &aws.Config{
-		Credentials:      credentials.NewStaticCredentials(s.AccessKey, s.SecretKey, ""),
-		Endpoint:         aws.String(s.Endpoint),
-		Region:           aws.String(s.Region),
-		S3ForcePathStyle: aws.Bool(true),
-	}
 
-	sess, err := session.NewSession(s3Config)
+	cred := aws.NewCredentialsCache(credentials.NewStaticCredentialsProvider(s.AccessKey, s.SecretKey, ""))
+	s3Config, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		return err
 	}
 
-	uploader := s3manager.NewUploader(sess, func(u *s3manager.Uploader) {
+	client := s3.NewFromConfig(s3Config, func(o *s3.Options) {
+		o.Credentials = cred
+		o.BaseEndpoint = aws.String(s.Endpoint)
+		o.Region = s.Region
+		o.UsePathStyle = true
+	})
+
+	uploader := manager.NewUploader(client, func(u *manager.Uploader) {
 		u.PartSize = 64 * 1024 * 1024 // 64MB per part
 	})
-	_, err = uploader.Upload(&s3manager.UploadInput{
+	_, err = uploader.Upload(context.TODO(), &s3.PutObjectInput{
 		Bucket: aws.String(s.Bucket),
 		Key:    aws.String(target),
 		Body:   file,

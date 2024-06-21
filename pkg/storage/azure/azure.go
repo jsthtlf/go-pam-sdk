@@ -3,10 +3,9 @@ package azure
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"os"
 
-	"github.com/Azure/azure-storage-blob-go/azblob"
+	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 )
 
 type ReplayStorage struct {
@@ -35,22 +34,34 @@ func (a ReplayStorage) Upload(gZipFilePath, target string) error {
 	if err != nil {
 		return err
 	}
-	p := azblob.NewPipeline(credential, azblob.PipelineOptions{})
-	endpoint := fmt.Sprintf("https://%s.blob.%s/%s", a.AccountName, a.EndpointSuffix, a.ContainerName)
-	URL, _ := url.Parse(endpoint)
-	containerURL := azblob.NewContainerURL(*URL, p)
-	blobURL := containerURL.NewBlockBlobURL(target)
 
-	commonResp, err := azblob.UploadFileToBlockBlob(context.TODO(), file, blobURL, azblob.UploadToBlockBlobOptions{
-		BlockSize:   4 * 1024 * 1024,
-		Parallelism: 16})
+	endpoint := fmt.Sprintf("https://%s.blob.%s/", a.AccountName, a.EndpointSuffix)
+	client, err := azblob.NewClientWithSharedKeyCredential(endpoint, credential, nil)
 	if err != nil {
 		return err
 	}
-	if httpResp := commonResp.Response(); httpResp != nil {
-		defer httpResp.Body.Close()
+
+	// TODO Проверить: создание контейнера | контейнер создан
+	_, err = client.CreateContainer(context.TODO(), a.ContainerName, nil)
+	if err != nil {
+		// TODO обработать, если контейнер уже создан
+		return err
 	}
-	return err
+
+	// TODO Проверить: загрузку файла | загрузку файлов
+	_, err = client.UploadStream(context.TODO(),
+		a.ContainerName,
+		target,
+		file,
+		&azblob.UploadStreamOptions{
+			BlockSize:   4 * 1024 * 1024,
+			Concurrency: 16,
+		})
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (a ReplayStorage) TypeName() string {

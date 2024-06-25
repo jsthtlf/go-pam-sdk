@@ -14,6 +14,9 @@ const (
 
 	orgHeaderKey   = "X-PAM-ORG"
 	orgHeaderValue = "ROOT"
+
+	langCookieKey   = "django_language"
+	langCookieValue = "en"
 )
 
 var defaultOptions = &options{
@@ -38,6 +41,7 @@ func New(opts ...Option) (core.Provider, error) {
 	}
 
 	httpClient.SetHeader(orgHeaderKey, orgHeaderValue)
+	httpClient.SetCookie(langCookieKey, langCookieValue)
 
 	p := &httpProvider{
 		authClient: httpClient,
@@ -61,6 +65,7 @@ func (p *httpProvider) Copy() core.Provider {
 	if p.opt.sign != nil {
 		client.SetAuthSign(p.opt.sign)
 	}
+	client.SetCookie(langCookieKey, langCookieValue)
 	client.SetHeader(orgHeaderKey, orgHeaderValue)
 
 	return &httpProvider{

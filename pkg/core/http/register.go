@@ -16,7 +16,7 @@ func (p *httpProvider) Register() error {
 	attempts := 10
 
 	if err := key.LoadFromFile(p.opt.AccessKeyPath); err != nil {
-		logger.Error("Load access key failed: %v", err)
+		logger.Errorf("Load access key failed: %v", err)
 		return p.register(attempts)
 	}
 
@@ -46,6 +46,8 @@ func (p *httpProvider) register(attempts int) error {
 
 func (p *httpProvider) registerAccount() (res model.Terminal, err error) {
 	regClient := p.authClient.Clone()
+	regClient.SetCookie(langCookieKey, langCookieValue)
+	regClient.SetHeader(orgHeaderKey, orgHeaderValue)
 	regClient.SetHeader("Authorization", fmt.Sprintf("BootstrapToken %s", p.opt.BootstrapToken))
 	data := map[string]string{
 		"name":    p.opt.TerminalName,

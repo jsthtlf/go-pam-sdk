@@ -1,0 +1,26 @@
+{
+  "name": "Go dev sdk",
+
+  "image": "ubuntu:focal",
+
+  "features": {
+    "ghcr.io/devcontainers/features/go:1": {
+      "version": "1.22"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+       "version": "lts"
+    }
+  },
+
+  "runArgs": [
+    "--name", "sdk",
+    "--net", "pam_net",
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "mhutchie.git-graph"
+      ]
+    }
+  }
+}

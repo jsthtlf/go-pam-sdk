@@ -9,6 +9,7 @@ import (
 	"github.com/jsthtlf/go-pam-sdk/pkg/httplib"
 	"github.com/jsthtlf/go-pam-sdk/pkg/logger"
 	"github.com/jsthtlf/go-pam-sdk/pkg/model"
+	"github.com/jsthtlf/go-pam-sdk/pkg/utils"
 )
 
 func (p *httpProvider) Register() error {
@@ -16,7 +17,7 @@ func (p *httpProvider) Register() error {
 	attempts := 10
 
 	if err := key.LoadFromFile(p.opt.AccessKeyPath); err != nil {
-		logger.Errorf("Load access key failed: %v", err)
+		logger.Errorf("Load access key failed: %v, try to register terminal", err)
 		return p.register(attempts)
 	}
 
@@ -27,6 +28,13 @@ func (p *httpProvider) register(attempts int) error {
 	for i := 0; i < attempts; i++ {
 		terminal, err := p.registerAccount()
 		if err != nil {
+			if errors.Is(httplib.ErrTerminalAlreadyExist, err) {
+				logger.Errorf("Register terminal failed: %v", err)
+				newName := fmt.Sprintf("%s-%s", p.opt.TerminalName, utils.RandStringRunes(4))
+				logger.Infof("Change terminal name from %s to %s and try again", p.opt.TerminalName, newName)
+				p.opt.TerminalName = newName
+				continue
+			}
 			logger.Error(err)
 			time.Sleep(time.Second * 3)
 			continue
@@ -62,7 +70,7 @@ func (p *httpProvider) validAccesKey(attempts int, key model.AccessKey) error {
 		if err := validAccessKey(p.opt.Host, key); err != nil {
 			switch {
 			case errors.Is(err, ErrUnauthorized):
-				logger.Error("Access key unauthorized, try to register new access key")
+				logger.Error("Access key unauthorized, try to register terminal")
 				return p.register(attempts)
 			default:
 				logger.Error("Check access key failed: %v", err)

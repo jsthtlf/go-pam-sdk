@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -12,6 +13,10 @@ import (
 	"os"
 	"strings"
 	"time"
+)
+
+var (
+	ErrTerminalAlreadyExist = errors.New("terminal already exist")
 )
 
 const minTimeout = time.Second * 30
@@ -226,6 +231,11 @@ func (c *Client) PostFileWithFields(reqUrl string, gFile string, fields map[stri
 	return c.handleResp(resp, res)
 }
 
+type ErrResponseType struct {
+	Detail string `json:"detail"`
+	Code   string `json:"code"`
+}
+
 func (c *Client) handleResp(resp *http.Response, res interface{}) (err error) {
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -238,6 +248,15 @@ func (c *Client) handleResp(resp *http.Response, res interface{}) (err error) {
 	}
 
 	if resp.StatusCode >= http.StatusBadRequest {
+		var exception ErrResponseType
+		err := json.Unmarshal(body, &exception)
+		if err == nil {
+			switch exception.Code {
+			case "terminal_already_exist":
+				return ErrTerminalAlreadyExist
+			}
+		}
+
 		return fmt.Errorf("%s %s failed, get response with %d: %s", req.Method, req.URL.Path, resp.StatusCode, body)
 	}
 

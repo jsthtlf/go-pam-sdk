@@ -6,7 +6,6 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/jsthtlf/go-pam-sdk/pkg/config"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,21 +19,14 @@ var logLevels = map[string]logrus.Level{
 	"CRITICAL": logrus.PanicLevel,
 }
 
-func Initial() {
-	conf := config.GetCurrentConfig()
+func Initial(logLevel string, logDirPath string) {
 	formatter := &Formatter{
 		LogFormat:       "%time% [%lvl%] %msg%",
 		TimestampFormat: "2006-01-02 15:04:05",
 	}
-	level, ok := logLevels[strings.ToUpper(conf.LogLevel)]
+	level, ok := logLevels[strings.ToUpper(logLevel)]
 	if !ok {
 		level = logrus.InfoLevel
-	}
-
-	if strings.Contains(conf.LogFormat, "%time%") &&
-		strings.Contains(conf.LogFormat, "%lvl%") &&
-		strings.Contains(conf.LogFormat, "%msg%") {
-		formatter.LogFormat = conf.LogFormat
 	}
 
 	// Output to stdout instead of the default stderr
@@ -44,7 +36,7 @@ func Initial() {
 	logger.SetLevel(level)
 
 	// Output to file
-	logFilePath := filepath.Join(conf.LogDirPath, "PAM.log")
+	logFilePath := filepath.Join(logDirPath, "PAM.log")
 	rotateFileHook, err := NewRotateFileHook(RotateFileConfig{
 		Filename:   logFilePath,
 		MaxSize:    50,
@@ -94,9 +86,9 @@ func Errorf(format string, args ...interface{}) {
 }
 
 func Panic(args ...interface{}) {
-	logrus.Panic(args...)
+	logger.Panic(args...)
 }
 
 func Fatal(args ...interface{}) {
-	logrus.Fatal(args...)
+	logger.Fatal(args...)
 }

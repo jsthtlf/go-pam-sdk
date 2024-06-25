@@ -33,8 +33,6 @@ type Config struct {
 	CoreHost       string `mapstructure:"CORE_HOST"`
 	BootstrapToken string `mapstructure:"BOOTSTRAP_TOKEN"`
 	LogLevel       string `mapstructure:"LOG_LEVEL"`
-	LogFormat      string `mapstructure:"LOG_FORMAT"`
-	LanguageCode   string `mapstructure:"LANGUAGE_CODE"`
 
 	TerminalType string
 
@@ -46,19 +44,13 @@ type Config struct {
 	ReplayFolderPath  string
 }
 
-func GetCurrentConfig() Config {
+func Initial() *Config {
 	if config == nil {
 		cfg := getDefaultConfig()
+		loadConfigFromEnv(&cfg)
 		config = &cfg
 	}
-	return *config
-}
-
-func SetupConfig() *Config {
-	var conf = getDefaultConfig()
-	loadConfigFromEnv(&conf)
-	config = &conf
-	return &conf
+	return config
 }
 
 func getDefaultConfig() Config {
@@ -84,8 +76,6 @@ func getDefaultConfig() Config {
 		CoreHost:       "http://localhost:8080",
 		BootstrapToken: "",
 		LogLevel:       "INFO",
-		LogFormat:      "%time% [%lvl%] %msg%",
-		LanguageCode:   "ru",
 
 		TerminalType: TerminalDefault,
 

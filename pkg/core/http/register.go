@@ -21,7 +21,7 @@ func (p *httpProvider) Register() error {
 		return p.register(attempts)
 	}
 
-	return p.validAccesKey(attempts, key)
+	return p.validAccessKey(attempts, key)
 }
 
 func (p *httpProvider) register(attempts int) error {
@@ -65,7 +65,7 @@ func (p *httpProvider) registerAccount() (res model.Terminal, err error) {
 	return
 }
 
-func (p *httpProvider) validAccesKey(attempts int, key model.AccessKey) error {
+func (p *httpProvider) validAccessKey(attempts int, key model.AccessKey) error {
 	for i := 0; i < attempts; i++ {
 		if err := validAccessKey(p.opt.Host, key); err != nil {
 			switch {
@@ -73,7 +73,7 @@ func (p *httpProvider) validAccesKey(attempts int, key model.AccessKey) error {
 				logger.Error("Access key unauthorized, try to register terminal")
 				return p.register(attempts)
 			default:
-				logger.Error("Check access key failed: %v", err)
+				logger.Errorf("Check access key failed: %v", err)
 			}
 			time.Sleep(time.Second * 3)
 			continue

@@ -28,12 +28,15 @@ func (p *httpProvider) register(attempts int) error {
 	for i := 0; i < attempts; i++ {
 		terminal, err := p.registerAccount()
 		if err != nil {
-			if errors.Is(httplib.ErrTerminalAlreadyExist, err) {
-				logger.Errorf("Register terminal failed: %v", err)
-				newName := fmt.Sprintf("%s-%s", p.opt.TerminalName, utils.RandStringRunes(4))
-				logger.Infof("Change terminal name from %s to %s and try again", p.opt.TerminalName, newName)
-				p.opt.TerminalName = newName
-				continue
+			errType := &httplib.ErrResponseType{}
+			if errors.As(err, &errType) {
+				if errType.Code == httplib.CodeTerminalAlreadyExist {
+					logger.Error(err)
+					newName := fmt.Sprintf("%s-%s", p.opt.TerminalName, utils.RandStringRunes(4))
+					logger.Infof("Change terminal name from %s to %s and try register again", p.opt.TerminalName, newName)
+					p.opt.TerminalName = newName
+					continue
+				}
 			}
 			logger.Error(err)
 			time.Sleep(time.Second * 3)

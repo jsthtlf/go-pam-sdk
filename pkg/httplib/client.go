@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"mime/multipart"
@@ -13,10 +12,6 @@ import (
 	"os"
 	"strings"
 	"time"
-)
-
-var (
-	ErrTerminalAlreadyExist = errors.New("terminal already exist")
 )
 
 const minTimeout = time.Second * 30
@@ -160,7 +155,6 @@ func (c *Client) Do(method, reqUrl string, data, res interface{}, params ...map[
 	if err != nil {
 		return
 	}
-	defer resp.Body.Close()
 
 	return resp, c.handleResp(resp, res)
 }
@@ -226,46 +220,56 @@ func (c *Client) PostFileWithFields(reqUrl string, gFile string, fields map[stri
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
 
 	return c.handleResp(resp, res)
 }
 
+var (
+	CodeTerminalAlreadyExist = "terminal_already_exist"
+	CodeObjectNotFound       = "object_does_not_exist"
+)
+
 type ErrResponseType struct {
+	Method  string
+	UrlPath string
+
 	Detail string `json:"detail"`
 	Code   string `json:"code"`
 }
 
+func (e ErrResponseType) Error() string {
+	return fmt.Sprintf("%s %s failed: %s (Code: %s)", e.Method, e.UrlPath, e.Detail, e.Code)
+}
+
 func (c *Client) handleResp(resp *http.Response, res interface{}) (err error) {
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return err
-	}
-	req := resp.Request
+	defer resp.Body.Close()
+
 	if buf, ok := res.(*bytes.Buffer); ok {
-		buf.Write(body)
+		_, err = buf.ReadFrom(resp.Body)
 		return err
 	}
+
+	req := resp.Request
 
 	if resp.StatusCode >= http.StatusBadRequest {
-		var exception ErrResponseType
-		err := json.Unmarshal(body, &exception)
-		if err == nil {
-			switch exception.Code {
-			case "terminal_already_exist":
-				return ErrTerminalAlreadyExist
-			}
+		exception := &ErrResponseType{
+			Method:  req.Method,
+			UrlPath: req.URL.Path,
+		}
+		decodeErr := json.NewDecoder(resp.Body).Decode(exception)
+		if decodeErr == nil {
+			return exception
 		}
 
-		return fmt.Errorf("%s %s failed, get response with %d: %s", req.Method, req.URL.Path, resp.StatusCode, body)
+		return fmt.Errorf("%s %s failed: %s", req.Method, req.URL.Path, resp.Status)
 	}
 
 	if res != nil {
 		switch {
 		case strings.Contains(resp.Header.Get("Content-Type"), "application/json"):
-			err = json.Unmarshal(body, res)
+			err = json.NewDecoder(resp.Body).Decode(res)
 			if err != nil {
-				return fmt.Errorf("%s %s failed, json unmarshal failed: %s", req.Method, req.URL, err)
+				return fmt.Errorf("%s %s failed, json unmarshal failed: %s", req.Method, req.URL.Path, err)
 			}
 		}
 	}

@@ -227,6 +227,7 @@ func (c *Client) PostFileWithFields(reqUrl string, gFile string, fields map[stri
 var (
 	CodeTerminalAlreadyExist = "terminal_already_exist"
 	CodeObjectNotFound       = "object_does_not_exist"
+	CodeAuthFailed           = "authentication_failed"
 )
 
 type ErrResponseType struct {

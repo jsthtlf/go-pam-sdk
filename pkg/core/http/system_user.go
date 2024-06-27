@@ -8,7 +8,7 @@ import (
 
 func (p *httpProvider) GetSystemUserById(systemUserId string) (sysUser model.SystemUser, err error) {
 	url := fmt.Sprintf(UrlSystemUserDetail, systemUserId)
-	_, err = p.authClient.Get(url, &sysUser)
+	_, err = p.get(url, &sysUser)
 	return
 }
 
@@ -21,13 +21,13 @@ func (p *httpProvider) GetUserApplicationAuthInfo(systemUserID, appID, userID, u
 	if userID != "" {
 		params["user_id"] = userID
 	}
-	_, err = p.authClient.Get(Url, &info, params)
+	_, err = p.get(Url, &info, params)
 	return
 }
 
 func (p *httpProvider) GetUserApplicationSystemUsers(userId, appId string) (res []model.SystemUser, err error) {
 	reqUrl := fmt.Sprintf(UrlUserPermsAppSystemUsers, userId, appId)
-	_, err = p.authClient.Get(reqUrl, &res)
+	_, err = p.get(reqUrl, &res)
 	return
 }
 
@@ -40,6 +40,6 @@ func (p *httpProvider) GetSystemUserAuthById(systemUserId, assetId, userId, user
 		"username": username,
 		"user_id":  userId,
 	}
-	_, err = p.authClient.Get(url, &info, params)
+	_, err = p.get(url, &info, params)
 	return
 }

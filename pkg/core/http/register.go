@@ -14,27 +14,32 @@ import (
 
 func (p *httpProvider) Register() error {
 	var key model.AccessKey
-	attempts := 10
+	attempts := 5
 
 	if err := key.LoadFromFile(p.opt.AccessKeyPath); err != nil {
-		logger.Errorf("Load access key failed: %v, try to register terminal", err)
-		return p.register(attempts)
+		logger.Errorf("Load access key failed: %v, trying sign up terminal", err)
+		return p.signup(attempts)
 	}
 
 	return p.validAccessKey(attempts, key)
 }
 
-func (p *httpProvider) register(attempts int) error {
+func (p *httpProvider) signupAgain(err error) error {
+	logger.Warn(err)
+	logger.Warn("Trying sign up terminal again")
+	return p.signup(3)
+}
+
+func (p *httpProvider) signup(attempts int) error {
 	for i := 0; i < attempts; i++ {
-		terminal, err := p.registerAccount()
+		terminal, err := p.signupAccount()
 		if err != nil {
 			errType := &httplib.ErrResponseType{}
 			if errors.As(err, &errType) {
 				if errType.Code == httplib.CodeTerminalAlreadyExist {
 					logger.Error(err)
-					newName := fmt.Sprintf("%s-%s", p.opt.TerminalName, utils.RandStringRunes(4))
-					logger.Warnf("Change terminal name from %s to %s and try register again", p.opt.TerminalName, newName)
-					p.opt.TerminalName = newName
+					p.opt.TerminalName = fmt.Sprintf("%s-%s", p.opt.TerminalName, utils.RandStringRunes(4))
+					logger.Warnf("Trying to sign up terminal again with new name: %s", p.opt.TerminalName)
 					continue
 				}
 			}
@@ -49,13 +54,14 @@ func (p *httpProvider) register(attempts int) error {
 			logger.Error("Error while save access key: %v", err)
 		}
 
+		logger.Infof("Terminal %s has been successfully signed up", p.opt.TerminalName)
 		return nil
 	}
 
-	return errors.New("attempts register account exceeded")
+	return errors.New("attempts sign up terminal exceeded")
 }
 
-func (p *httpProvider) registerAccount() (res model.Terminal, err error) {
+func (p *httpProvider) signupAccount() (res model.Terminal, err error) {
 	regClient := p.authClient.Clone()
 	regClient.SetCookie(langCookieKey, langCookieValue)
 	regClient.SetHeader(orgHeaderKey, orgHeaderValue)
@@ -73,8 +79,8 @@ func (p *httpProvider) validAccessKey(attempts int, key model.AccessKey) error {
 		if err := validAccessKey(p.opt.Host, key); err != nil {
 			switch {
 			case errors.Is(err, ErrUnauthorized):
-				logger.Error("Access key unauthorized, try to register terminal")
-				return p.register(attempts)
+				logger.Error("Access key unauthorized, trying sign up terminal")
+				return p.signup(attempts)
 			default:
 				logger.Errorf("Check access key failed: %v", err)
 			}

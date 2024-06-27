@@ -9,13 +9,13 @@ import (
 
 func (p *httpProvider) GetUserById(uid string) (user *model.User, err error) {
 	url := fmt.Sprintf(UrlUserDetail, uid)
-	_, err = p.authClient.Get(url, &user)
+	_, err = p.get(url, &user)
 	return
 }
 
 func (p *httpProvider) GetProfile() (user *model.User, err error) {
 	var res *http.Response
-	res, err = p.authClient.Get(UrlUserProfile, &user)
+	res, err = p.get(UrlUserProfile, &user)
 	if res == nil && err != nil {
 		return nil, fmt.Errorf("%w:%v", ErrConnect, err)
 	}
@@ -38,6 +38,6 @@ func (p *httpProvider) GetShareUserInfo(query string) (res []*model.MiniUser, er
 	params := make(map[string]string)
 	params["action"] = "suggestion"
 	params["search"] = query
-	_, err = p.authClient.Get(UrlUserList, &res, params)
+	_, err = p.get(UrlUserList, &res, params)
 	return
 }

@@ -7,23 +7,23 @@ import (
 )
 
 func (p *httpProvider) CreateFileOperationLog(data model.FTPLog) (err error) {
-	_, err = p.authClient.Post(UrlFtpLogList, data, nil)
+	_, err = p.post(UrlFtpLogList, data, nil)
 	return
 }
 
 func (p *httpProvider) CreateSessionCommand(commands []*model.Command) (err error) {
-	_, err = p.authClient.Post(UrlSessionCommand, commands, nil)
+	_, err = p.post(UrlSessionCommand, commands, nil)
 	return
 }
 
 func (p *httpProvider) CreateNotifyCommand(commands []*model.Command) (err error) {
-	_, err = p.authClient.Post(UrlSessionNotifyCommand, commands, nil)
+	_, err = p.post(UrlSessionNotifyCommand, commands, nil)
 	return
 }
 
 func (p *httpProvider) GetSystemUserFilterRules(systemUserID string) (rules []model.FilterRule, err error) {
 	Url := fmt.Sprintf(UrlSystemUserCmdFilterRulesList, systemUserID)
-	_, err = p.authClient.Get(Url, &rules)
+	_, err = p.get(Url, &rules)
 	return
 }
 
@@ -42,6 +42,6 @@ func (p *httpProvider) GetCommandFilterRules(userId, sysId, assetId, appId strin
 		param["application_id"] = appId
 	}
 
-	_, err = p.authClient.Get(UrlCmdFilterRulesList, &rules, param)
+	_, err = p.get(UrlCmdFilterRulesList, &rules, param)
 	return
 }

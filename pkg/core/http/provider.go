@@ -1,6 +1,8 @@
 package http
 
 import (
+	"errors"
+	"net/http"
 	"time"
 
 	"github.com/jsthtlf/go-pam-sdk/pkg/core"
@@ -76,4 +78,70 @@ func (p *httpProvider) Copy() core.Provider {
 
 func (p *httpProvider) SetCookie(name, value string) {
 	p.authClient.SetCookie(name, value)
+}
+
+func (p *httpProvider) get(reqUrl string, res interface{}, params ...map[string]string) (resp *http.Response, err error) {
+	resp, err = p.authClient.Get(reqUrl, res, params...)
+	if p.needRequestAgain(err) {
+		resp, err = p.authClient.Get(reqUrl, res, params...)
+	}
+	return
+}
+
+func (p *httpProvider) post(reqUrl string, data interface{}, res interface{}, params ...map[string]string) (resp *http.Response, err error) {
+	resp, err = p.authClient.Post(reqUrl, data, res, params...)
+	if p.needRequestAgain(err) {
+		resp, err = p.authClient.Post(reqUrl, data, res, params...)
+	}
+	return
+}
+
+func (p *httpProvider) delete(reqUrl string, res interface{}, params ...map[string]string) (resp *http.Response, err error) {
+	resp, err = p.authClient.Delete(reqUrl, res, params...)
+	if p.needRequestAgain(err) {
+		resp, err = p.authClient.Delete(reqUrl, res, params...)
+	}
+	return
+}
+
+func (p *httpProvider) put(reqUrl string, data interface{}, res interface{}, params ...map[string]string) (resp *http.Response, err error) {
+	resp, err = p.authClient.Put(reqUrl, data, res, params...)
+	if p.needRequestAgain(err) {
+		resp, err = p.authClient.Put(reqUrl, data, res, params...)
+	}
+	return
+}
+
+func (p *httpProvider) patch(reqUrl string, data interface{}, res interface{}, params ...map[string]string) (resp *http.Response, err error) {
+	resp, err = p.authClient.Patch(reqUrl, data, res, params...)
+	if p.needRequestAgain(err) {
+		resp, err = p.authClient.Patch(reqUrl, data, res, params...)
+	}
+	return
+}
+
+func (p *httpProvider) postFileWithFields(reqUrl string, gFile string, fields map[string]string, res interface{}) (err error) {
+	err = p.authClient.PostFileWithFields(reqUrl, gFile, fields, res)
+	if p.needRequestAgain(err) {
+		err = p.authClient.PostFileWithFields(reqUrl, gFile, fields, res)
+	}
+	return err
+}
+
+func (p *httpProvider) needRequestAgain(err error) bool {
+	if err == nil {
+		return false
+	}
+
+	errType := &httplib.ErrResponseType{}
+	if errors.As(err, &errType) {
+		if errType.Code == httplib.CodeAuthFailed {
+			err = p.signupAgain(err)
+			if err == nil {
+				return true
+			}
+		}
+	}
+
+	return false
 }

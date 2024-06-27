@@ -14,7 +14,7 @@ func (p *httpProvider) SubmitCommandConfirm(sid string, ruleId string, cmd strin
 		"cmd_filter_rule_id": ruleId,
 		"run_command":        cmd,
 	}
-	_, err = p.authClient.Post(UrlCommandConfirm, data, &res)
+	_, err = p.post(UrlCommandConfirm, data, &res)
 	return
 }
 
@@ -26,7 +26,7 @@ func (p *httpProvider) CheckIfNeedAssetLoginConfirm(userId, assetId, systemUserI
 		"system_user_username": sysUsername,
 	}
 
-	_, err = p.authClient.Post(UrlAssetLoginConfirm, data, &res)
+	_, err = p.post(UrlAssetLoginConfirm, data, &res)
 	return
 }
 
@@ -49,9 +49,9 @@ func (p *httpProvider) CheckConfirmStatusByRequestInfo(req model.ReqInfo) (res m
 func (p *httpProvider) sendRequestByRequestInfo(req model.ReqInfo, res interface{}) (err error) {
 	switch strings.ToUpper(req.Method) {
 	case http.MethodGet:
-		_, err = p.authClient.Get(req.URL, res)
+		_, err = p.get(req.URL, res)
 	case http.MethodDelete:
-		_, err = p.authClient.Delete(req.URL, res)
+		_, err = p.delete(req.URL, res)
 	default:
 		err = fmt.Errorf("unsupport method %s", req.Method)
 	}

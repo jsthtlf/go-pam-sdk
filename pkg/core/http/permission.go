@@ -14,7 +14,7 @@ func (p *httpProvider) GetPermission(userId, assetId, systemUserId string) (perm
 		"asset_id":       assetId,
 		"system_user_id": systemUserId,
 	}
-	_, err = p.authClient.Get(UrlAssetPermsDetail, &perms, params)
+	_, err = p.get(UrlAssetPermsDetail, &perms, params)
 	return
 }
 
@@ -28,7 +28,7 @@ func (p *httpProvider) ValidateApplicationPermission(userId, appId, systemUserId
 		"application_id": appId,
 		"system_user_id": systemUserId,
 	}
-	_, err = p.authClient.Get(UrlValidateAppPerms, &info, params)
+	_, err = p.get(UrlValidateAppPerms, &info, params)
 	return
 }
 
@@ -41,7 +41,7 @@ func (p *httpProvider) ValidateAssetConnectPermission(userId, assetId, systemUse
 		"system_user_id": systemUserId,
 		"action_name":    actionConnect,
 	}
-	_, err = p.authClient.Get(UrlValidateAssetPerms, &info, params)
+	_, err = p.get(UrlValidateAssetPerms, &info, params)
 	return
 }
 
@@ -50,20 +50,20 @@ func (p *httpProvider) ValidateJoinSessionPermission(userId, sessionId string) (
 		"user_id":    userId,
 		"session_id": sessionId,
 	}
-	_, err = p.authClient.Post(UrlValidateJoinRoom, data, &result)
+	_, err = p.post(UrlValidateJoinRoom, data, &result)
 	return
 }
 
 func (p *httpProvider) SearchPermAsset(userId, key string) (res model.AssetList, err error) {
 	Url := fmt.Sprintf(UrlUserPermsAssets, userId)
 	payload := map[string]string{"search": key}
-	_, err = p.authClient.Get(Url, &res, payload)
+	_, err = p.get(Url, &res, payload)
 	return
 }
 
 func (p *httpProvider) GetSystemUsersByUserIdAndAssetId(userId, assetId string) (sysUsers []model.SystemUser, err error) {
 	Url := fmt.Sprintf(UrlUserPermsAssetSystemUsers, userId, assetId)
-	_, err = p.authClient.Get(Url, &sysUsers)
+	_, err = p.get(Url, &sysUsers)
 	return
 }
 
@@ -96,7 +96,7 @@ func (p *httpProvider) GetUserAssetByID(userId, assetId string) (assets []model.
 		"id": assetId,
 	}
 	Url := fmt.Sprintf(UrlUserPermsAssets, userId)
-	_, err = p.authClient.Get(Url, &assets, params)
+	_, err = p.get(Url, &assets, params)
 	return
 }
 
@@ -105,7 +105,7 @@ func (p *httpProvider) GetUserPermAssetsByIP(userId, assetIP string) (assets []m
 		"ip": assetIP,
 	}
 	reqUrl := fmt.Sprintf(UrlUserPermsAssets, userId)
-	_, err = p.authClient.Get(reqUrl, &assets, params)
+	_, err = p.get(reqUrl, &assets, params)
 	return
 }
 
@@ -129,10 +129,10 @@ func (p *httpProvider) getPaginationResult(reqUrl string, param model.Pagination
 	}
 	paramsArray = append(paramsArray, params)
 	if param.PageSize > 0 {
-		_, err = p.authClient.Get(reqUrl, &resp, paramsArray...)
+		_, err = p.get(reqUrl, &resp, paramsArray...)
 	} else {
 		var data []map[string]interface{}
-		_, err = p.authClient.Get(reqUrl, &data, paramsArray...)
+		_, err = p.get(reqUrl, &data, paramsArray...)
 		resp.Data = data
 		resp.Total = len(data)
 	}
@@ -170,7 +170,7 @@ func (p *httpProvider) GetUserNodeAssets(userID, nodeID string, params model.Pag
 
 func (p *httpProvider) GetUserNodes(userId string) (nodes model.NodeList, err error) {
 	Url := fmt.Sprintf(UrlUserPermsNodesList, userId)
-	_, err = p.authClient.Get(Url, &nodes)
+	_, err = p.get(Url, &nodes)
 	return
 }
 
@@ -179,7 +179,7 @@ func (p *httpProvider) RefreshUserNodes(userId string) (nodes model.NodeList, er
 		"rebuild_tree": "1",
 	}
 	Url := fmt.Sprintf(UrlUserPermsNodesList, userId)
-	_, err = p.authClient.Get(Url, &nodes, params)
+	_, err = p.get(Url, &nodes, params)
 	return
 }
 
@@ -189,6 +189,6 @@ func (p *httpProvider) GetNodeTreeByUserAndNodeKey(userID, nodeKey string) (node
 		payload["key"] = nodeKey
 	}
 	apiURL := fmt.Sprintf(UrlUserPermsNodeTreeWithAsset, userID)
-	_, err = p.authClient.Get(apiURL, &nodeTrees, payload)
+	_, err = p.get(apiURL, &nodeTrees, payload)
 	return
 }

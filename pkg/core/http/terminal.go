@@ -8,7 +8,7 @@ import (
 )
 
 func (p *httpProvider) GetTerminalConfig() (conf model.TerminalConfig, err error) {
-	_, err = p.authClient.Get(UrlTerminalConfig, &conf)
+	_, err = p.get(UrlTerminalConfig, &conf)
 	return
 }
 
@@ -20,18 +20,18 @@ func (p *httpProvider) HeartBeat(sIds []string) (res []model.TerminalTask, err e
 		DiskUsed:         utils.DiskUsagePercent(),
 		SessionOnline:    len(sIds),
 	}
-	_, err = p.authClient.Post(UrlTerminalHeartBeat, data, &res)
+	_, err = p.post(UrlTerminalHeartBeat, data, &res)
 	return
 }
 
 func (p *httpProvider) GetPublicSetting() (result model.PublicSetting, err error) {
-	_, err = p.authClient.Get(UrlPublicSetting, &result)
+	_, err = p.get(UrlPublicSetting, &result)
 	return
 }
 
 func (p *httpProvider) FinishTask(tid string) error {
 	data := map[string]bool{"is_finished": true}
 	Url := fmt.Sprintf(UrlTerminalTask, tid)
-	_, err := p.authClient.Patch(Url, data, nil)
+	_, err := p.patch(Url, data, nil)
 	return err
 }

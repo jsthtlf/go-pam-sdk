@@ -9,13 +9,13 @@ import (
 )
 
 func (p *httpProvider) CreateSession(sess model.Session) error {
-	_, err := p.authClient.Post(UrlSessionList, sess, nil)
+	_, err := p.post(UrlSessionList, sess, nil)
 	return err
 }
 
 func (p *httpProvider) sessionPatch(sid string, data interface{}) error {
 	Url := fmt.Sprintf(UrlSessionDetail, sid)
-	_, err := p.authClient.Patch(Url, data, nil)
+	_, err := p.patch(Url, data, nil)
 	return err
 }
 
@@ -47,7 +47,7 @@ func (p *httpProvider) SessionFinished(sid string, t time.Time) error {
 
 func (p *httpProvider) GetSessionById(sid string) (data model.Session, err error) {
 	reqURL := fmt.Sprintf(UrlSessionDetail, sid)
-	_, err = p.authClient.Get(reqURL, &data)
+	_, err = p.get(reqURL, &data)
 	return
 }
 
@@ -56,7 +56,7 @@ func (p *httpProvider) CreateSessionTicketRelation(sid, ticketId string) (err er
 		"session": sid,
 		"ticket":  ticketId,
 	}
-	_, err = p.authClient.Post(UrlSessionTicketRelation, data, nil)
+	_, err = p.post(UrlSessionTicketRelation, data, nil)
 	return
 }
 
@@ -66,7 +66,7 @@ func (p *httpProvider) UploadReplay(sid, gZipFile string) error {
 	data := map[string]string{
 		"version": string(version),
 	}
-	return p.authClient.PostFileWithFields(Url, gZipFile, data, nil)
+	return p.postFileWithFields(Url, gZipFile, data, nil)
 }
 
 func (p *httpProvider) FinishReply(sid string) error {

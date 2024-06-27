@@ -8,7 +8,7 @@ import (
 
 func (p *httpProvider) GetTokenAsset(token string) (tokenUser model.TokenUser, err error) {
 	Url := fmt.Sprintf(UrlTokenAsset, token)
-	_, err = p.authClient.Get(Url, &tokenUser)
+	_, err = p.get(Url, &tokenUser)
 	return
 }
 
@@ -16,7 +16,7 @@ func (p *httpProvider) GetConnectTokenAuth(token string) (resp model.ConnectToke
 	data := map[string]string{
 		"token": token,
 	}
-	_, err = p.authClient.Post(UrlTokenAuthInfo, data, &resp)
+	_, err = p.post(UrlTokenAuthInfo, data, &resp)
 	return
 }
 
@@ -24,6 +24,6 @@ func (p *httpProvider) RenewalToken(token string) (resp model.TokenRenewalRespon
 	data := map[string]string{
 		"token": token,
 	}
-	_, err = p.authClient.Patch(UrlTokenRenewal, data, &resp)
+	_, err = p.patch(UrlTokenRenewal, data, &resp)
 	return
 }

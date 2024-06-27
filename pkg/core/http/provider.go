@@ -133,9 +133,9 @@ func (p *httpProvider) needRequestAgain(err error) bool {
 		return false
 	}
 
-	errType := &httplib.ErrResponseType{}
-	if errors.As(err, &errType) {
-		if errType.Code == httplib.CodeAuthFailed {
+	respErr := &httplib.ResponseError{}
+	if errors.As(err, &respErr) {
+		if respErr.HasCode(httplib.CodeAuthFailed) {
 			err = p.signupAgain(err)
 			if err == nil {
 				return true

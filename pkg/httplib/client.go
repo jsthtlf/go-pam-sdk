@@ -235,9 +235,10 @@ func (c *Client) handleResp(resp *http.Response, res interface{}) (err error) {
 	req := resp.Request
 
 	if resp.StatusCode >= http.StatusBadRequest {
-		exception := &ErrResponseType{
+		exception := &ResponseError{
 			Method:  req.Method,
 			UrlPath: req.URL.Path,
+			Status:  resp.Status,
 		}
 		decodeErr := json.NewDecoder(resp.Body).Decode(exception)
 		if decodeErr == nil {

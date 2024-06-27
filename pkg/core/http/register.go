@@ -33,7 +33,7 @@ func (p *httpProvider) register(attempts int) error {
 				if errType.Code == httplib.CodeTerminalAlreadyExist {
 					logger.Error(err)
 					newName := fmt.Sprintf("%s-%s", p.opt.TerminalName, utils.RandStringRunes(4))
-					logger.Infof("Change terminal name from %s to %s and try register again", p.opt.TerminalName, newName)
+					logger.Warnf("Change terminal name from %s to %s and try register again", p.opt.TerminalName, newName)
 					p.opt.TerminalName = newName
 					continue
 				}

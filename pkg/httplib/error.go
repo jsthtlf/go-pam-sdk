@@ -9,6 +9,8 @@ var (
 	CodeTerminalAlreadyExist = "terminal_already_exist"
 	CodeObjectNotFound       = "object_does_not_exist"
 	CodeAuthFailed           = "authentication_failed"
+	CodeLicenseValidateError = "license_validate_error"
+	CodeLicenseLimitSessions = "license_limit_sessions"
 )
 
 type ResponseError struct {

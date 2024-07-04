@@ -3,17 +3,15 @@ package http
 import (
 	"errors"
 	"net/http"
-	"time"
 
 	"github.com/jsthtlf/go-pam-sdk/pkg/core"
 	"github.com/jsthtlf/go-pam-sdk/pkg/httplib"
+	"github.com/jsthtlf/go-pam-sdk/pkg/utils"
 )
 
 var _ core.Provider = (*httpProvider)(nil)
 
 const (
-	minTimeOut = time.Second * 30
-
 	orgHeaderKey   = "X-PAM-ORG"
 	orgHeaderValue = "ROOT"
 
@@ -22,8 +20,8 @@ const (
 )
 
 var defaultOptions = &options{
-	Host:    "127.0.0.1",
-	TimeOut: minTimeOut,
+	TerminalName: utils.GetHostname(),
+	Host:         "127.0.0.1",
 }
 
 func New(opts ...Option) (core.Provider, error) {
@@ -31,10 +29,6 @@ func New(opts ...Option) (core.Provider, error) {
 
 	for _, setter := range opts {
 		setter(opt)
-	}
-
-	if opt.TimeOut < minTimeOut {
-		opt.TimeOut = minTimeOut
 	}
 
 	httpClient, err := httplib.NewClient(opt.Host, opt.TimeOut)

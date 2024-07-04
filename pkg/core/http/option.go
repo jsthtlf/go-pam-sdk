@@ -41,7 +41,9 @@ func WithBootstrapToken(token string) Option {
 
 func WithTerminalName(name string) Option {
 	return func(o *options) {
-		o.TerminalName = name
+		if name != "" {
+			o.TerminalName = name
+		}
 	}
 }
 

@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -13,10 +12,6 @@ import (
 )
 
 const (
-	hostEnvKey = "SERVER_HOSTNAME"
-
-	defaultNameMaxLen = 128
-
 	TerminalDefault = "pam-default"
 	TerminalDb      = "db"
 	TerminalDbWeb   = "db-web-ssh"
@@ -54,8 +49,6 @@ func Initial() *Config {
 }
 
 func getDefaultConfig() Config {
-	defaultName := getDefaultName()
-
 	rootPath := getPwdDirPath()
 	dataFolderPath := filepath.Join(rootPath, "data")
 	replayFolderPath := filepath.Join(dataFolderPath, "replays")
@@ -70,7 +63,7 @@ func getDefaultConfig() Config {
 		}
 	}
 	return Config{
-		Name:    defaultName,
+		Name:    "",
 		Comment: "Pam terminal",
 
 		CoreHost:       "http://localhost:8080",
@@ -107,30 +100,4 @@ func loadConfigFromEnv(conf *Config) {
 	if err := envViper.Unmarshal(conf); err == nil {
 		log.Println("Load config from env: success")
 	}
-}
-
-/*
-SERVER_HOSTNAME: Имя переменной окружения, может использоваться для настройки префикса зарегистрированного имени по умолчанию
-Формат стандартного имени:
-[PAM]-{SERVER_HOSTNAME}-{HOSTNAME}
-
-	or
-
-[PAM]-{HOSTNAME}
-*/
-func getDefaultName() string {
-	hostname, _ := os.Hostname()
-	if serverHostname, ok := os.LookupEnv(hostEnvKey); ok {
-		hostname = fmt.Sprintf("%s-%s", serverHostname, hostname)
-	}
-	hostRune := []rune("[PAM] - " + hostname)
-	if len(hostRune) <= defaultNameMaxLen {
-		return string(hostRune)
-	}
-	name := make([]rune, defaultNameMaxLen)
-	index := defaultNameMaxLen / 2
-	copy(name[:index], hostRune[:index])
-	start := len(hostRune) - index
-	copy(name[index:], hostRune[start:])
-	return string(name)
 }

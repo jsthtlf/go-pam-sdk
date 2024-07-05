@@ -12,7 +12,7 @@ func (p *httpProvider) GetTerminalConfig() (conf model.TerminalConfig, err error
 	return
 }
 
-func (p *httpProvider) HeartBeat(sIds []string) (res []model.TerminalTask, err error) {
+func (p *httpProvider) HeartBeat(sIds []string) (res model.HeartbeatResponse, err error) {
 	data := model.HeartbeatData{
 		SessionOnlineIds: sIds,
 		CpuUsed:          utils.CpuLoad1Usage(),

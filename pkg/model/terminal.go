@@ -30,6 +30,11 @@ type Terminal struct {
 	} `json:"service_account"`
 }
 
+type HeartbeatResponse struct {
+	Tasks         []TerminalTask `json:"tasks"`
+	NextHeartbeat int            `json:"next_heartbeat"`
+}
+
 type TerminalTask struct {
 	ID         string     `json:"id"`
 	Name       string     `json:"name"`

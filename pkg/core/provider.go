@@ -36,7 +36,7 @@ type (
 	TerminalProvider interface {
 		Register() error
 		GetTerminalConfig() (conf model.TerminalConfig, err error)
-		HeartBeat(sIds []string) (res []model.TerminalTask, err error)
+		HeartBeat(sIds []string) (res model.HeartbeatResponse, err error)
 		GetPublicSetting() (result model.PublicSetting, err error)
 		FinishTask(tid string) error
 	}

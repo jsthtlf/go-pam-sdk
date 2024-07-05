@@ -9,6 +9,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+var initiated = false
 var logger = logrus.New()
 var logLevels = map[string]logrus.Level{
 	"DEBUG":    logrus.DebugLevel,
@@ -20,6 +21,10 @@ var logLevels = map[string]logrus.Level{
 }
 
 func Initial(logLevel string, logDirPath string) {
+	if initiated {
+		return
+	}
+	initiated = true
 	formatter := &Formatter{
 		LogFormat:       "%time% [%lvl%] %msg%",
 		TimestampFormat: "2006-01-02 15:04:05",

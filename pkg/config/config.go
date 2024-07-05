@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/jsthtlf/go-pam-sdk/pkg/logger"
 	"github.com/jsthtlf/go-pam-sdk/pkg/utils"
 
 	"github.com/spf13/viper"
@@ -44,6 +45,8 @@ func Initial() *Config {
 		cfg := getDefaultConfig()
 		loadConfigFromEnv(&cfg)
 		config = &cfg
+
+		logger.Initial(cfg.LogLevel, cfg.LogDirPath)
 	}
 	return config
 }

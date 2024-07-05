@@ -41,6 +41,8 @@ type Config struct {
 
 	HealthHost string
 	HealthPort int
+
+	TerminalConfigUpdateInterval int
 }
 
 func Initial() *Config {
@@ -87,6 +89,8 @@ func getDefaultConfig() Config {
 
 		HealthHost: "0.0.0.0",
 		HealthPort: 33445,
+
+		TerminalConfigUpdateInterval: 30,
 	}
 }
 

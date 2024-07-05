@@ -38,6 +38,9 @@ type Config struct {
 	KeyFolderPath     string
 	AccessKeyFilePath string
 	ReplayFolderPath  string
+
+	HealthHost string
+	HealthPort int
 }
 
 func Initial() *Config {
@@ -81,6 +84,9 @@ func getDefaultConfig() Config {
 		LogDirPath:        LogDirPath,
 		KeyFolderPath:     keyFolderPath,
 		ReplayFolderPath:  replayFolderPath,
+
+		HealthHost: "0.0.0.0",
+		HealthPort: 33445,
 	}
 }
 

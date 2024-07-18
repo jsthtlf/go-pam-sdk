@@ -1,50 +1,41 @@
 package user
 
-import "github.com/jsthtlf/go-pam-sdk/pkg/httplib"
-
-type options struct {
+type otpOptions struct {
 	Username   string
 	Password   string
 	PublicKey  string
 	RemoteAddr string
 	LoginType  string
-	client     *httplib.Client
 }
 
-type Option func(*options)
+type Option func(*otpOptions)
 
 func WithUsername(username string) Option {
-	return func(args *options) {
+	return func(args *otpOptions) {
 		args.Username = username
 	}
 }
 
 func WithPassword(password string) Option {
-	return func(args *options) {
+	return func(args *otpOptions) {
 		args.Password = password
 	}
 }
 
 func WithPublicKey(publicKey string) Option {
-	return func(args *options) {
+	return func(args *otpOptions) {
 		args.PublicKey = publicKey
 	}
 }
 
 func WithRemoteAddr(remoteAddr string) Option {
-	return func(args *options) {
+	return func(args *otpOptions) {
 		args.RemoteAddr = remoteAddr
 	}
 }
 
 func WithLoginType(loginType string) Option {
-	return func(args *options) {
+	return func(args *otpOptions) {
 		args.LoginType = loginType
-	}
-}
-
-func WithHttpClient(con *httplib.Client) Option {
-	return func(args *options) {
-		args.client = con
 	}
 }

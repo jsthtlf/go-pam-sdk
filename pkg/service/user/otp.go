@@ -11,43 +11,41 @@ const (
 	UrlUserAuthMFASelect = "/api/v1/authentication/mfa/select/"
 )
 
-var defaultOptions = &options{}
-
-func NewOTPClient(setters ...Option) *OTPClient {
-	opts := defaultOptions
-	for _, setter := range setters {
-		setter(opts)
+func NewOTPClient(client httplib.Client, opts ...Option) *OTPClient {
+	var option otpOptions
+	for _, setter := range opts {
+		setter(&option)
 	}
-	if opts.RemoteAddr != "" {
-		opts.client.SetHeader("X-Forwarded-For", opts.RemoteAddr)
+	if option.RemoteAddr != "" {
+		client.SetHeader("X-Forwarded-For", option.RemoteAddr)
 	}
-	if opts.LoginType != "" {
-		opts.client.SetHeader("X-PAM-LOGIN-TYPE", opts.LoginType)
+	if option.LoginType != "" {
+		client.SetHeader("X-PAM-LOGIN-TYPE", option.LoginType)
 	}
 	return &OTPClient{
-		client: opts.client,
-		Opts:   opts,
+		client:  &client,
+		options: &option,
 	}
 }
 
 type OTPClient struct {
-	client *httplib.Client
-	Opts   *options
+	client  *httplib.Client
+	options *otpOptions
 }
 
 func (c *OTPClient) SetOption(setters ...Option) {
 	for _, setter := range setters {
-		setter(c.Opts)
+		setter(c.options)
 	}
 }
 
 func (c *OTPClient) GetAPIToken() (resp AuthResponse, err error) {
 	data := map[string]string{
-		"username":    c.Opts.Username,
-		"password":    c.Opts.Password,
-		"public_key":  c.Opts.PublicKey,
-		"remote_addr": c.Opts.RemoteAddr,
-		"login_type":  c.Opts.LoginType,
+		"username":    c.options.Username,
+		"password":    c.options.Password,
+		"public_key":  c.options.PublicKey,
+		"remote_addr": c.options.RemoteAddr,
+		"login_type":  c.options.LoginType,
 	}
 	_, err = c.client.Post(UrlUserAuthToken, data, &resp)
 	return

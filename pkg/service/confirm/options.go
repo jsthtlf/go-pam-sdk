@@ -1,6 +1,10 @@
 package confirm
 
-import "github.com/jsthtlf/go-pam-sdk/pkg/model"
+import (
+	"time"
+
+	"github.com/jsthtlf/go-pam-sdk/pkg/model"
+)
 
 type confirmOptions struct {
 	user       model.User
@@ -8,6 +12,9 @@ type confirmOptions struct {
 
 	targetType string
 	targetID   string
+
+	attempts     int
+	attemptDelay time.Duration
 }
 
 type Option func(*confirmOptions)
@@ -33,5 +40,17 @@ func WithTargetType(targetType string) Option {
 func WithTargetID(targetID string) Option {
 	return func(option *confirmOptions) {
 		option.targetID = targetID
+	}
+}
+
+func WithAttempts(attempts int) Option {
+	return func(option *confirmOptions) {
+		option.attempts = attempts
+	}
+}
+
+func WithAttemptsDelay(delay time.Duration) Option {
+	return func(option *confirmOptions) {
+		option.attemptDelay = delay
 	}
 }

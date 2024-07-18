@@ -24,21 +24,28 @@ const (
 	StatusCancel
 )
 
+var defaultOptions = &confirmOptions{
+	attempts:     3,
+	attemptDelay: 5 * time.Second,
+}
+
 func NewLoginConfirm(provider loginConfirmProvider, opts ...Option) LoginConfirmService {
-	var option confirmOptions
+	opt := defaultOptions
+
 	for _, setter := range opts {
-		setter(&option)
+		setter(opt)
 	}
+
 	return LoginConfirmService{
-		options:  &option,
 		provider: provider,
+		opts:     opt,
 	}
 }
 
 type LoginConfirmService struct {
 	provider loginConfirmProvider
 
-	options *confirmOptions
+	opts *confirmOptions
 
 	checkReqInfo  model.ReqInfo
 	cancelReqInfo model.ReqInfo
@@ -51,11 +58,11 @@ type LoginConfirmService struct {
 }
 
 func (c *LoginConfirmService) CheckIsNeedLoginConfirm() (bool, error) {
-	userID := c.options.user.ID
-	systemUserID := c.options.systemUser.ID
-	systemUsername := c.options.systemUser.Username
-	targetID := c.options.targetID
-	switch c.options.targetType {
+	userID := c.opts.user.ID
+	systemUserID := c.opts.systemUser.ID
+	systemUsername := c.opts.systemUser.Username
+	targetID := c.opts.targetID
+	switch c.opts.targetType {
 	case model.AppType:
 		return c.provider.CheckIfNeedAppConnectionConfirm(userID, targetID, systemUserID)
 	default:
@@ -96,7 +103,7 @@ func (c *LoginConfirmService) GetTicketId() string {
 }
 
 func (c *LoginConfirmService) waitConfirmFinish(ctx context.Context) Status {
-	t := time.NewTicker(10 * time.Second)
+	t := time.NewTicker(c.opts.attemptDelay)
 	attemp := 0
 	defer t.Stop()
 	for {
@@ -108,7 +115,7 @@ func (c *LoginConfirmService) waitConfirmFinish(ctx context.Context) Status {
 			statusRes, err := c.provider.CheckConfirmStatusByRequestInfo(c.checkReqInfo)
 			if err != nil {
 				logger.Errorf("Check confirm status failed: %s", err)
-				if attemp > 3 {
+				if attemp > c.opts.attempts {
 					return StatusUnknown
 				}
 				attemp++
@@ -120,9 +127,11 @@ func (c *LoginConfirmService) waitConfirmFinish(ctx context.Context) Status {
 			case model.TicketApproved:
 				c.processor = statusRes.Processor
 				return StatusApprove
-			case model.TicketRejected, model.TicketCanceled:
+			case model.TicketRejected:
 				c.processor = statusRes.Processor
 				return StatusReject
+			case model.TicketCanceled:
+				return StatusCancel
 			default:
 				logger.Errorf("Receive unknown login confirm status: %s", statusRes.Status)
 				return StatusUnknown

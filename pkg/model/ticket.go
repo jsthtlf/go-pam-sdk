@@ -20,7 +20,7 @@ const (
 	TicketOpen     = "pending"
 	TicketApproved = "approved"
 	TicketRejected = "rejected"
-	TicketClosed   = "closed"
+	TicketCanceled = "canceled"
 )
 
 type AssetLoginTicketInfo struct {

@@ -17,6 +17,7 @@ type tasksCallback func(tasks []model.TerminalTask)
 func Start(getSessions sessionsCallback, executeTasks tasksCallback, p heartbeatProvider) {
 	interval := 5
 	for {
+		time.Sleep(time.Second * time.Duration(interval))
 		logger.Debug("Send terminal heartbeat...")
 		data := getSessions()
 		resp, err := p.HeartBeat(data)
@@ -28,6 +29,5 @@ func Start(getSessions sessionsCallback, executeTasks tasksCallback, p heartbeat
 		if len(resp.Tasks) != 0 {
 			go executeTasks(resp.Tasks)
 		}
-		time.Sleep(time.Duration(interval) * time.Second)
 	}
 }

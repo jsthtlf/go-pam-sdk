@@ -15,6 +15,7 @@ type updateConfigCallback func(config model.TerminalConfig)
 
 func Start(interval int, updateConfig updateConfigCallback, p configProvider) {
 	for {
+		time.Sleep(time.Second * time.Duration(interval))
 		logger.Debug("Updating terminal config...")
 		conf, err := p.GetTerminalConfig()
 		if err != nil {
@@ -23,6 +24,5 @@ func Start(interval int, updateConfig updateConfigCallback, p configProvider) {
 		}
 
 		updateConfig(conf)
-		time.Sleep(time.Second * time.Duration(interval))
 	}
 }

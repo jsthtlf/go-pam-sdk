@@ -6,19 +6,21 @@ import (
 )
 
 var (
-	CodeTerminalAlreadyExist = "terminal_already_exist"
-	CodeObjectNotFound       = "object_does_not_exist"
-	CodeAuthFailed           = "authentication_failed"
-	CodeLicenseValidateError = "license_validate_error"
-	CodeLicenseLimitSessions = "license_limit_sessions"
+	CodeTerminalAlreadyExist         = "terminal_already_exist"
+	CodeTerminalRegistrationDisabled = "terminal_registration_disabled"
+	CodeObjectNotFound               = "object_does_not_exist"
+	CodeAuthFailed                   = "authentication_failed"
+	CodeLicenseValidateError         = "license_validate_error"
+	CodeLicenseLimitSessions         = "license_limit_sessions"
 )
 
 var detailMessages = map[string]string{
-	CodeTerminalAlreadyExist: "Terminal with this name already exists",
-	CodeObjectNotFound:       "Requested object does not exist",
-	CodeAuthFailed:           "The terminal cannot be authenticated",
-	CodeLicenseValidateError: "The license does not exist or cannot be validated",
-	CodeLicenseLimitSessions: "The license session limit has been exceeded",
+	CodeTerminalAlreadyExist:         "Terminal with this name already exists",
+	CodeTerminalRegistrationDisabled: "Terminal registration is disabled",
+	CodeObjectNotFound:               "Requested object does not exist",
+	CodeAuthFailed:                   "The terminal cannot be authenticated",
+	CodeLicenseValidateError:         "The license does not exist or cannot be validated",
+	CodeLicenseLimitSessions:         "The license session limit has been exceeded",
 }
 
 type ResponseError struct {

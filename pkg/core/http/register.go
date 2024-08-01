@@ -34,15 +34,19 @@ func (p *httpProvider) signup(attempts int) error {
 	for i := 0; i < attempts; i++ {
 		terminal, err := p.signupAccount()
 		if err != nil {
-			logger.Error(err)
 			respErr := &httplib.ResponseError{}
 			if errors.As(err, &respErr) {
 				if respErr.HasCode(httplib.CodeTerminalAlreadyExist) {
+					logger.Error(err)
 					p.opt.TerminalName = fmt.Sprintf("%s-%s", p.opt.TerminalName, utils.RandStringRunes(4))
 					logger.Infof("Trying to sign up terminal again with new name: %s", p.opt.TerminalName)
 					continue
 				}
+				if respErr.HasCode(httplib.CodeTerminalRegistrationDisabled) {
+					logger.Fatal(respErr)
+				}
 			}
+			logger.Error(err)
 			time.Sleep(time.Second * 3)
 			continue
 		}

@@ -12,7 +12,7 @@ const (
 )
 
 func NewOTPClient(client httplib.Client, opts ...Option) *OTPClient {
-	var option otpOptions
+	var option OtpOptions
 	for _, setter := range opts {
 		setter(&option)
 	}
@@ -23,29 +23,29 @@ func NewOTPClient(client httplib.Client, opts ...Option) *OTPClient {
 		client.SetHeader("X-PAM-LOGIN-TYPE", option.LoginType)
 	}
 	return &OTPClient{
-		client:  &client,
-		options: &option,
+		client: &client,
+		Opts:   &option,
 	}
 }
 
 type OTPClient struct {
-	client  *httplib.Client
-	options *otpOptions
+	client *httplib.Client
+	Opts   *OtpOptions
 }
 
 func (c *OTPClient) SetOption(setters ...Option) {
 	for _, setter := range setters {
-		setter(c.options)
+		setter(c.Opts)
 	}
 }
 
 func (c *OTPClient) GetAPIToken() (resp AuthResponse, err error) {
 	data := map[string]string{
-		"username":    c.options.Username,
-		"password":    c.options.Password,
-		"public_key":  c.options.PublicKey,
-		"remote_addr": c.options.RemoteAddr,
-		"login_type":  c.options.LoginType,
+		"username":    c.Opts.Username,
+		"password":    c.Opts.Password,
+		"public_key":  c.Opts.PublicKey,
+		"remote_addr": c.Opts.RemoteAddr,
+		"login_type":  c.Opts.LoginType,
 	}
 	_, err = c.client.Post(UrlUserAuthToken, data, &resp)
 	return

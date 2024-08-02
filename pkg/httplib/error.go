@@ -10,6 +10,7 @@ var (
 	CodeTerminalRegistrationDisabled = "terminal_registration_disabled"
 	CodeObjectNotFound               = "object_does_not_exist"
 	CodeAuthFailed                   = "authentication_failed"
+	CodeAuthNotProvided              = "not_authenticated"
 	CodeLicenseValidateError         = "license_validate_error"
 	CodeLicenseLimitSessions         = "license_limit_sessions"
 )
@@ -19,6 +20,7 @@ var detailMessages = map[string]string{
 	CodeTerminalRegistrationDisabled: "Terminal registration is disabled",
 	CodeObjectNotFound:               "Requested object does not exist",
 	CodeAuthFailed:                   "The terminal cannot be authenticated",
+	CodeAuthNotProvided:              "Authentication credentials were not provided",
 	CodeLicenseValidateError:         "The license does not exist or cannot be validated",
 	CodeLicenseLimitSessions:         "The license session limit has been exceeded",
 }
@@ -44,7 +46,9 @@ func (e *ResponseError) HasCode(code string) bool {
 
 func (e *ResponseError) Error() string {
 	if codeValue, ok := e.Params["code"].(string); ok {
-		return detailMessages[codeValue]
+		if msg, ok := detailMessages[codeValue]; ok {
+			return msg
+		}
 	}
 
 	if len(e.Params) == 0 {

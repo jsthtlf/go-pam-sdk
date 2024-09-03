@@ -35,3 +35,8 @@ func (p *httpProvider) FinishTask(tid string) error {
 	_, err := p.patch(Url, data, nil)
 	return err
 }
+
+func (p *httpProvider) GetTerminalTasks() (tasks model.TerminalTasks, err error) {
+	_, err = p.post(UrlTerminalTasks, nil, &tasks)
+	return
+}

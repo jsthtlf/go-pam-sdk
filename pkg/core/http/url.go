@@ -14,6 +14,7 @@ const (
 	UrlTerminalHeartBeat = "/api/v1/terminal/terminals/status/"
 	UrlTerminalTask      = "/api/v1/terminal/tasks/%s/"
 	UrlPublicSetting     = "/api/v1/settings/public/"
+	UrlTerminalTasks     = "/api/v1/terminal/terminal-tasks/"
 )
 
 // AssetProvider urls

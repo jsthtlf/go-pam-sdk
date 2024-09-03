@@ -31,8 +31,12 @@ type Terminal struct {
 }
 
 type HeartbeatResponse struct {
-	Tasks         []TerminalTask `json:"tasks"`
-	NextHeartbeat int            `json:"next_heartbeat"`
+	NextHeartbeat int `json:"next_heartbeat"`
+}
+
+type TerminalTasks struct {
+	Tasks       []TerminalTask `json:"tasks"`
+	NextRequest int            `json:"next_request"`
 }
 
 type TerminalTask struct {

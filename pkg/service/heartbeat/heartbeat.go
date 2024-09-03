@@ -12,9 +12,8 @@ type heartbeatProvider interface {
 }
 
 type sessionsCallback func() []string
-type tasksCallback func(tasks []model.TerminalTask)
 
-func Start(getSessions sessionsCallback, executeTasks tasksCallback, p heartbeatProvider) {
+func Start(getSessions sessionsCallback, p heartbeatProvider) {
 	interval := 5
 	for {
 		time.Sleep(time.Second * time.Duration(interval))
@@ -26,8 +25,5 @@ func Start(getSessions sessionsCallback, executeTasks tasksCallback, p heartbeat
 			continue
 		}
 		interval = resp.NextHeartbeat
-		if len(resp.Tasks) != 0 {
-			go executeTasks(resp.Tasks)
-		}
 	}
 }

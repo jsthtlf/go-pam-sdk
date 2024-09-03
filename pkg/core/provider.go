@@ -39,6 +39,7 @@ type (
 		HeartBeat(sIds []string) (res model.HeartbeatResponse, err error)
 		GetPublicSetting() (result model.PublicSetting, err error)
 		FinishTask(tid string) error
+		GetTerminalTasks() (tasksList model.TerminalTasks, err error)
 	}
 
 	AssetProvider interface {
